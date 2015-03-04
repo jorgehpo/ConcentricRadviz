@@ -1,0 +1,17 @@
+{
+    "contents" : "#server.R\n\nrequire(shiny)\nsource(\"ReadMusicData.R\")\n\n\ninputSongs <- function(text){\n  array = eval(parse(text=text))\n  if (length(array) == 1){\n    array = c(array,array)\n  }\n  return (array)\n}\n\nshinyServer(function(input, output,session) {\n  data <- generateDataGenre(\"/media/Dados/Experimentos/StreamingExtractorArchiveMusic/CoversJ/\")\n  output$myCanvas <- reactive(data)\n})\n",
+    "created" : 1425477103736.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2666367942",
+    "id" : "B4AEDC34",
+    "lastKnownWriteTime" : 1425477109,
+    "path" : "/media/Dados/Dropbox/Mestrado/Programas/D3RadvizViews/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

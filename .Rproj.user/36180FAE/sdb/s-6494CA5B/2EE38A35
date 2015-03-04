@@ -1,0 +1,17 @@
+{
+    "contents" : "# ui.R\n\n\n\nRadvizCanvas <- function (my.id = \"myRadvizCanvas\"){\n  tags$div(id= my.id, class=\"circleLayoutCanvas\",tag(\"svg\",\"\"), width = 8)\n}\n\nshinyUI( \n  fluidPage(\n    tags$head(\n      tags$script(type = \"text/javascript\", src = \"d3.v3/d3.v3.js\"),\n      tags$link(rel=\"stylesheet\", type=\"text/css\", href=\"scripts/circleStyle.css\"),\n      tags$script(type=\"text/javascript\", src=\"scripts/auxMath.js\"),\n      tags$script(type=\"text/javascript\", src= \"scripts/circleLayout.js\")\n    ),\n    titlePanel(\"MusicVis - Shiny\"),\n    sidebarLayout(\n      sidebarPanel(\"Menu pra colocar alguma coisa\"),\n      mainPanel(\n        RadvizCanvas(\"myCanvas\")\n        ,width=7)\n    )\n    \n  )\n)",
+    "created" : 1425476103749.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "974198139",
+    "id" : "2EE38A35",
+    "lastKnownWriteTime" : 1425476984,
+    "path" : "/media/Dados/Dropbox/Mestrado/Programas/D3RadvizViews/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
