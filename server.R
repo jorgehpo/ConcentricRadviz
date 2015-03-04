@@ -14,6 +14,5 @@ inputSongs <- function(text){
 
 shinyServer(function(input, output,session) {
   data <- generateDataGenre("/media/Dados/Experimentos/StreamingExtractorArchiveMusic/CoversJ/")
-
   output$myCanvas <- reactive(data)
 })

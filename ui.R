@@ -8,7 +8,7 @@ shinyUI(
   fluidPage(
     tags$head(
       tags$script(type = "text/javascript", src = "d3.v3/d3.v3.js"),
-      #tags$link(rel="stylesheet", type="text/css", href="scripts/circleStyle.css"),
+      tags$link(rel="stylesheet", type="text/css", href="css/radviz.css"),
       tags$script(type="text/javascript", src="numericJS/numeric-1.2.6.min.js"),
       tags$script(type="text/javascript", src= "scripts/scriptRadviz.js")
     ),
