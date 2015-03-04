@@ -27,9 +27,8 @@ generateDataGenre <- function(json.folder, genreType = "genre_tzanetakis"){
   ret$tags$songTitles = songTitles
   ret$tags$songArtists = songArtists
   
-  ret$matrixData = list()
-  ret$matrixData$originalData = matGenre
-  ret$matrixData$varNames = genres
+  ret$dataFrame = matGenre
+  ret$varNames = genres
   
   #colnames(matGenre) = genres
   #r = radviz(matGenre)
