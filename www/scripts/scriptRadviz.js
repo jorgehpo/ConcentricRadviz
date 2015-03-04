@@ -44,21 +44,13 @@ function radviz(data){
     var yi = numeric.sum(mData[i]);
     var pt = [0,0];
     for (j = 0; j < ncol; j++){
-      var aux = anchors[j].slice();
-      var k = aux.length;
-      while (--k){
-        aux[k] = aux[k] * mData[i][j];
-      }
-      pt = numeric.add(pt, aux);
+      pt[0] = pt[0] + anchors[j][0] * mData[i][j];
+      pt[1] = pt[1] + anchors[j][1] * mData[i][j];
     }
-    k = pt.length;
-    while(--k){
-      pt[k] = pt[k]/yi;
-    }
-    console.log(pt)
+    pt[0] = pt[0]/yi;
+    pt[1] = pt[1]/yi;
     proj.push(pt);
   }
-  console.log(proj)
   return (proj)
 }//end - function radviz
 
@@ -182,16 +174,16 @@ var networdOutputBindingRadviz = new Shiny.OutputBinding();
             d3.select("." + drag.element + " text").attr("transform", "translate(" + dimensionsGroups[group].radius + ",0) rotate(" + (180 - (arc/(Math.PI/180))) + ") scale(-1,1)");
         }
     });
-
-  //alert(data.matrixData.originalData.length+ " "+ data.matrixData.originalData[1].length)
   
     rad = radviz(data)
     
+    var smallestCircle = radius -100;
+    
     var xValue = function(d){return d[0];};
-    var xScale = d3.scale.linear().range([-radius, radius]).domain([-1,1]);//input domain, output range
+    var xScale = d3.scale.linear().range([-smallestCircle, smallestCircle]).domain([-1,1]);//input domain, output range
     var xMap = function(d) { return xScale(xValue(d));}
     var yValue =function(d){return d[1];}; 
-    var yScale = d3.scale.linear().range([-radius, radius]).domain([-1,1]);//input domain, output range
+    var yScale = d3.scale.linear().range([-smallestCircle, smallestCircle]).domain([-1,1]);//input domain, output range
     var yMap = function(d) { return yScale(yValue(d));}
     
     
