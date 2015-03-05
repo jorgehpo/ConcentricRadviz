@@ -13,12 +13,12 @@ shinyUI(
       tags$script(type="text/javascript", src= "scripts/scriptRadviz.js")
     ),
     titlePanel("Concentric Radviz"),
-    sidebarLayout(
-      sidebarPanel("Menu pra colocar alguma coisa"),
+    #sidebarLayout(
+    #  sidebarPanel("Menu pra colocar alguma coisa"),
       mainPanel(
         RadvizCanvas("myCanvas")
         ,width=7)
-    )
+    #)
     
   )
 )

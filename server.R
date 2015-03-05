@@ -13,6 +13,7 @@ inputSongs <- function(text){
 }
 
 shinyServer(function(input, output,session) {
-  data <- generateDataGenre("data/CoversJ")
+  data <- generateDataRecursive("data/CoversJ")
+  #data <- generateDataRecursive("/media/Dados/Experimentos/StreamingExtractorArchiveMusic/PersonalSongs/")
   output$myCanvas <- reactive(data)
 })

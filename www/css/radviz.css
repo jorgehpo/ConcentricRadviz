@@ -11,3 +11,10 @@ g.selected circle {
     -ms-user-select: none;
     user-select: none;
 }
+
+.tooltip {
+  position: absolute;
+  width: 200px;
+  height: 28px;
+  pointer-events: none;
+}
