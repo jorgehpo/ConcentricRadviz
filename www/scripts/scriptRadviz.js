@@ -1,26 +1,15 @@
 //scriptRadviz.js
 
-  var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 1);
-    
-    
-  var teste = d3.select("body").append("div")
-    .style("width", "200px")
-    .style("height", "200px")
-    .style("fill", "c0392b");
-
-
 function normalizeData(m){
-  var min = m[0].slice() //copy array by value
-  var max = m[0].slice() //copy array by value
+  var min = m[0].slice(); //copy array by value
+  var max = m[0].slice(); //copy array by value
   for (var i = 0; i < m.length; i++){
     for (var j = 0; j < m[0].length; j++){
       if (m[i][j] < min[j]){
-        min[j] = m[i][j]
+        min[j] = m[i][j];
       }
       if (m[i][j] > max[j]){
-        max[j] = m[i][j]
+        max[j] = m[i][j];
       }
     }
   }
@@ -85,7 +74,7 @@ $.extend(networdOutputBindingRadviz, {
     find: function(scope) {
         return $(scope).find('.radvizCanvas');
     },
-    renderValue: function(el, data){
+    renderValue: function(el, info){
 
         //-----------------------------
         //-Código de Exemplo
@@ -101,17 +90,16 @@ $.extend(networdOutputBindingRadviz, {
         setTimeout(function () {
             radViews.addCircle(new RadvizViewsCircle("Group 4","#16a085",[{name: "W", pos: 60},{name: "Y", pos: 145},{name: "Z", pos: 230}]));
         },2500);
-        rad = radviz(data);
-
-        var smallestCircle = radViews.getSmallestCircleRadius();
-        //-----------------------------
-   
+        
+ 
     //%%%%%%%%%%%%%%%%% RADVIZ AND PLOTTING %%%%%%%%%%%%%%%%%%%%%%%
     var columnsGenre = ["genre_tzanetakis.blu", "genre_tzanetakis.cla", "genre_tzanetakis.cou", "genre_tzanetakis.dis", "genre_tzanetakis.hip", "genre_tzanetakis.jaz", "genre_tzanetakis.met", "genre_tzanetakis.pop", "genre_tzanetakis.reg", "genre_tzanetakis.roc"];
     
     var columnsHumor = ["mood_acoustic.acoustic",   "mood_aggressive.aggressive", "mood_electronic.electronic", "mood_happy.happy", "mood_party.party", "mood_relaxed.relaxed", "mood_sad.sad" ];
     
     var mydat = selectColumns(info.data, columnsGenre);
+    
+    var smallestCircle = radViews.getSmallestCircleRadius();
     
     var rad = radviz(mydat, info.tags.filename)
     
@@ -133,21 +121,12 @@ $.extend(networdOutputBindingRadviz, {
       .attr("cy", yMap)
       .on("mouseover", function(d){
         if (d.tip){
-          console.log(d3.event.pageX + " "+ d3.event.pageY)
-          console.log(d.tip)
-          tooltip.transition()
-               .duration(200)
-               .style("opacity", .9);
-          tooltip.html(d.tip)
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
+          
         }
       })
       .on("mouseout", function(d){
         if (d.tip){
-          tooltip.transition()
-               .duration(500)
-               .style("opacity", 0);
+          
         }
       });
     }//renderValue function
