@@ -79,6 +79,7 @@ $.extend(networdOutputBindingRadviz, {
         //-----------------------------
         //-Código de Exemplo
         var radViews = new RadvizViews(el,{diameter: 800, circleOffset: 20});
+        var tooltip = new Tooltip();
 
         radViews.addCircle(new RadvizViewsCircle("Group 1","#27ae60",[{name: "A", pos: 0},{name: "B", pos: 90},{name: "C", pos: 180},{name: "D", pos: 270}]));
         radViews.addCircle(new RadvizViewsCircle("Group 2","#16a085",[{name: "E", pos: 45},{name: "F", pos: 135},{name: "G", pos: 225}]));
@@ -121,12 +122,12 @@ $.extend(networdOutputBindingRadviz, {
       .attr("cy", yMap)
       .on("mouseover", function(d){
         if (d.tip){
-          
+            tooltip.show(d.tip);
         }
       })
       .on("mouseout", function(d){
         if (d.tip){
-          
+            tooltip.hide();
         }
       });
     }//renderValue function
