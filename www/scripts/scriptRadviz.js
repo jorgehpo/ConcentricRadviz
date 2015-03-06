@@ -7,10 +7,23 @@ $.extend(networdOutputBindingRadviz, {
     },
     renderValue: function (el, info) {
 
+        var radViews = new RadvizViews(el, {diameter: 800, circleOffset: 20});
+        var radInterface = new RadvizInterface(radViews);
+        var tooltip = new Tooltip();
+
+        radInterface.addDimension("A","a");
+        radInterface.addDimension("B","b");
+        radInterface.addDimension("C","c");
+        radInterface.addDimension("D","d");
+
+        radInterface.addGroup("Group 1","#27ae60");
+        radInterface.addGroup("Group 2","#16a085");
+
+        radInterface.addDimensionToGroup(0,0);
+        radInterface.addDimensionToGroup(1,0);
+        radInterface.addDimensionToGroup(3,1);
         //-----------------------------
         //-Código de Exemplo
-        var radViews = new RadvizViews(el, {diameter: 800, circleOffset: 20});
-        var tooltip = new Tooltip();
         /*
          radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 1","#27ae60",[{name: "A", pos: 0},{name: "B", pos: 90},{name: "C", pos: 180},{name: "D", pos: 270}]));
          radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 2","#16a085",[{name: "E", pos: 45},{name: "F", pos: 135},{name: "G", pos: 225}]));
