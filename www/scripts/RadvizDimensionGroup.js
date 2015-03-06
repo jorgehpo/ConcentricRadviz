@@ -1,4 +1,4 @@
-function RadvizViewsCircle (name,color,dimensions) {
+function RadvizDimensionGroup(name, color, dimensions) {
     this.name = name;
     this.color = color;
     this.dimensions = dimensions;

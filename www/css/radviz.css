@@ -18,3 +18,12 @@ g.selected circle {
   height: 28px;
   pointer-events: none;
 }
+
+body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: default;
+}
