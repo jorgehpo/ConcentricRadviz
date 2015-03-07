@@ -11,20 +11,27 @@ Radviz.prototype.setAnchors = function(anchors) {
     //compute matrix data again, from data and columns
     var colNames = [];
     this.anchorAngles = [];
-    console.log(anchors[0]);
-    var _this = this
+
+    var _this = this;
     anchors.forEach(function(a){
         if (!a.available) {
             colNames.push(a.attribute);
-            _this.anchorAngles.push((a.pos*Math.PI)/360); //converts from degree (D3) to radians (js math)
+            _this.anchorAngles.push((a.pos*Math.PI*2)/360); //converts from degree (D3) to radians (js math)
         }
     });
     this.matrix = this.selectColumns(colNames);
 };
 
 Radviz.prototype.updateAnchors = function(anchors) {
-    console.log("setAnchors");
-    console.log(anchors);
+    //console.log("setAnchors");
+    //console.log(anchors);
+    this.anchorAngles = [];
+    var _this = this;
+    anchors.forEach(function(a){
+        if (!a.available) {
+            _this.anchorAngles.push((a.pos*Math.PI*2)/360); //converts from degree (D3) to radians (js math)
+        }
+    });
 };
 
 Radviz.prototype.anglesToXY = function(){ //transform this.anchorAngles to position matrix[[x,y]] and returns
@@ -34,6 +41,7 @@ Radviz.prototype.anglesToXY = function(){ //transform this.anchorAngles to posit
         var rotMat = [[Math.cos(angle), -Math.sin(angle)], [Math.sin(angle), Math.cos(angle)]];
         anchorMatrix.push(numeric.dot(rotMat,initPoint));
     });
+    console.log(anchorMatrix);
     return anchorMatrix;
 }
 
