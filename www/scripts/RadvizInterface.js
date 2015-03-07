@@ -64,6 +64,7 @@ RadvizInterface.prototype.removeGroup = function (groupId) {
         this.dimensionsGroups = [];
     }
     this.radviz.setAnchors(this.dimensions);
+    this.drawPoints();
     this.draw();
 };
 
@@ -75,6 +76,7 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.dimensionsGroups[groupId].dimensions.push(dimensionId);
     this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
     this.radviz.setAnchors(this.dimensions);
+    this.drawPoints();
     this.draw();
 };
 
@@ -90,6 +92,7 @@ RadvizInterface.prototype.removeDimensionFromGroup = function (dimensionId) {
             this.radvizViews.removeDimensionFromGroup(dimensionId,oldGroup);
             this.radviz.setAnchors(this.dimensions);
         }
+        this.drawPoints();
         this.draw();
     }
 };
@@ -177,22 +180,25 @@ RadvizInterface.prototype.drawPoints = function () {
         return yScale(yValue(d));
     };
 
-
-    radInterface.getSvg().selectAll(".dot")
-        .data(this.radviz.computeProjection())
-        .enter().append("circle")
-        .attr("class", "dot")
-        .attr("r", 3.5)
-        .attr("cx", xMap)
-        .attr("cy", yMap)
-        .on("mouseover", function (d) {
-            if (d.tip) {
-                this.tooltip.show(d.tip);
-            }
-        })
-        .on("mouseout", function (d) {
-            if (d.tip) {
-                this.tooltip.hide();
-            }
-        });
+    var proj = this.radviz.computeProjection();
+    console.log(proj);
+    if (proj.length > 0){
+        radInterface.getSvg().selectAll(".dot")
+            .data(proj)
+            .enter().append("circle")
+            .attr("class", "dot")
+            .attr("r", 3.5)
+            .attr("cx", xMap)
+            .attr("cy", yMap)
+            .on("mouseover", function (d) {
+                if (d.tip) {
+                    this.tooltip.show(d.tip);
+                }
+            })
+            .on("mouseout", function (d) {
+                if (d.tip) {
+                    this.tooltip.hide();
+                }
+            });
+    }
 };
