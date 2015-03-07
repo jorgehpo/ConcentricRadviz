@@ -180,9 +180,10 @@ RadvizInterface.prototype.drawPoints = function () {
         return yScale(yValue(d));
     };
 
+    var _this = this;
     var proj = this.radviz.computeProjection();
-    console.log(proj);
     if (proj.length > 0){
+        radInterface.getSvg().selectAll(".dot").remove();
         radInterface.getSvg().selectAll(".dot")
             .data(proj)
             .enter().append("circle")
@@ -192,12 +193,12 @@ RadvizInterface.prototype.drawPoints = function () {
             .attr("cy", yMap)
             .on("mouseover", function (d) {
                 if (d.tip) {
-                    this.tooltip.show(d.tip);
+                    _this.tooltip.show(d.tip);
                 }
             })
             .on("mouseout", function (d) {
                 if (d.tip) {
-                    this.tooltip.hide();
+                    _this.tooltip.hide();
                 }
             });
     }
