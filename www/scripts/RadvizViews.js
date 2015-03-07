@@ -7,9 +7,14 @@ function RadvizViews(el, options) {
     this.drag = {dragging: false, element: ""};
     this.groups = [];
     this.numberOfGroups = 0;
+    this.updateDimensions = null;
 
     this.init();
 }
+
+RadvizViews.prototype.setUpdateDimensions = function (updateDimensions) {
+    this.updateDimensions = updateDimensions;
+};
 
 RadvizViews.prototype.getSvg = function () {
     return this.svg;
@@ -132,6 +137,9 @@ RadvizViews.prototype.drawDimensions = function () {
         _this.drag.dragging = false;
         _this.drag.element = "";
         d3.selectAll(".dimension").classed("selected", false);
+        if (_this.updateDimensions) {
+            _this.updateDimensions();
+        }
     });
 
     this.svg.on('mousemove', function () {

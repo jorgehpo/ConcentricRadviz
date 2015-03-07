@@ -23,7 +23,7 @@ Radviz.prototype.setAnchors = function(anchors) {
 };
 
 Radviz.prototype.updateAnchors = function(anchors) {
-    console.log("setAnchors");
+    console.log("updateAnchors");
     console.log(anchors);
 };
 
