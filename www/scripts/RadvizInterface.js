@@ -1,4 +1,4 @@
-var COLORSCALE = ["#1abc9c","#7f8c8d","#3498db","#c0392b","#9b59b6","#d35400","#2ecc71","#34495e","#f39c12","#bdc3c7"];
+var COLORSCALE = ["#1abc9c","#c0392b","#3498db","#9b59b6","#7f8c8d","#d35400","#2ecc71","#34495e","#f39c12","#bdc3c7","#f1c40f","#2c3e50","#e74c3c","#16a085","#95a5a6","#8e44ad","#27ae60","#e67e22","#2980b9"];
 
 function RadvizInterface(radViews) {
     this.radvizViews = radViews;
@@ -10,6 +10,14 @@ function RadvizInterface(radViews) {
     this.uniqueGroupsCount = 0;
     this.uniqueRemovedGroupsCount = 0;
 }
+
+RadvizInterface.prototype.getSvg = function () {
+    return this.radvizViews.getSvg();
+};
+
+RadvizInterface.prototype.getSmallestCircleRadius = function () {
+    return this.radvizViews.getSmallestCircleRadius();
+};
 
 RadvizInterface.prototype.addDimension = function (name,attribute) {
     var dim = {id: this.uniqueDimensionsCount,name: name,attribute: attribute,available: true,group: false,pos: 0};

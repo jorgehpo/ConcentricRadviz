@@ -10,28 +10,6 @@ $.extend(networdOutputBindingRadviz, {
         window.radInterface = new RadvizInterface(new RadvizViews(el, {diameter: 800, circleOffset: 20}));
         var tooltip = new Tooltip();
 
-        //radInterface.addGroup("Group 1","#27ae60");
-        //radInterface.addGroup("Group 2","#16a085");
-        //
-        //radInterface.addDimensionToGroup(0,0);
-        //radInterface.addDimensionToGroup(1,0);
-        //radInterface.addDimensionToGroup(3,1);
-        //-----------------------------
-        //-Código de Exemplo
-        /*
-         radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 1","#27ae60",[{name: "A", pos: 0},{name: "B", pos: 90},{name: "C", pos: 180},{name: "D", pos: 270}]));
-         radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 2","#16a085",[{name: "E", pos: 45},{name: "F", pos: 135},{name: "G", pos: 225}]));
-         radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 3","#2980b9",[{name: "H", pos: 30},{name: "I", pos: 195},{name: "J", pos: 260}]));
-
-         setTimeout(function () {
-         radViews.removeDimension(1);
-         },1500);
-         setTimeout(function () {
-         radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 4","#16a085",[{name: "W", pos: 60},{name: "Y", pos: 145},{name: "Z", pos: 230}]));
-         },2500);
-
-         */
-
         //%%%%%%%%%%%%%%%%% RADVIZ AND PLOTTING %%%%%%%%%%%%%%%%%%%%%%%
         var columnsGenre = ["genre_tzanetakis.blu", "genre_tzanetakis.cla", "genre_tzanetakis.cou", "genre_tzanetakis.dis", "genre_tzanetakis.hip", "genre_tzanetakis.jaz", "genre_tzanetakis.met", "genre_tzanetakis.pop", "genre_tzanetakis.reg", "genre_tzanetakis.roc"];
 
@@ -43,15 +21,13 @@ $.extend(networdOutputBindingRadviz, {
 
         var mydat = selectColumns(info.data, Object.keys(info.data));
 
-        var smallestCircle = radInterface.radvizViews.getSmallestCircleRadius();
+        var smallestCircle = radInterface.getSmallestCircleRadius();
 
-        console.log(Object.keys(info.data))
+        console.log(Object.keys(info.data));
         var anchors = computeAnchors(info.data, Object.keys(info.data));
         //anchors = [{name: 'A', pos: 0}, {name: 'B', pos: 67}];
 
         console.log(anchors);
-
-        //radViews.addDimensionsGroup(new RadvizDimensionGroup("Genre", "#27ae60", anchors));
 
         var rad = radviz(mydat, info.tags.filename);
 
@@ -72,7 +48,7 @@ $.extend(networdOutputBindingRadviz, {
         };
 
 
-        radInterface.radvizViews.getSvg().selectAll(".dot")
+        radInterface.getSvg().selectAll(".dot")
             .data(rad)
             .enter().append("circle")
             .attr("class", "dot")
