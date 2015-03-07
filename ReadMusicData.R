@@ -1,6 +1,6 @@
 require(RJSONIO)
 
-generateDataRecursive <- function(json.folder){
+generateDataRecursive <- function(json.folder, genre = "genre_tzanetakis"){
 
   files= list.files(json.folder,recursive = T,full.names = T)
   js = fromJSON(files[1])
@@ -13,7 +13,10 @@ generateDataRecursive <- function(json.folder){
   idsProbability = which(unlist(lapply(varNames,function(x){grepl('probability',x)})))
   idsMirex = which(unlist(lapply(varNames,function(x){grepl('mirex',x)})))
   idsNot = which(unlist(lapply(varNames,function(x){grepl('not',x)})))
-  ignoreIDs = c(idsNA,idsProbability,idsMirex,idsNot)
+  idsGenre = which(unlist(lapply(varNames,function(x){grepl('genre',x)})))
+  idsGenreInterest = which(unlist(lapply(varNames,function(x){grepl('genre_tzanetakis',x)})))
+  idsIgnoreGenres = setdiff(idsGenre, idsGenreInterest)
+  ignoreIDs = c(idsNA,idsProbability,idsMirex,idsNot, idsIgnoreGenres)
   
   
   varNames = varNames[-ignoreIDs]

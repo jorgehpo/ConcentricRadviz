@@ -58,7 +58,7 @@ RadvizViews.prototype.addDimensionsGroup = function (dimensionGroup) {
         dimensionGroup.dimensionsObjects[i] = dimG;
     });
 
-    console.log(this.groups);
+    //console.log(this.groups);
     this.numberOfGroups++;
 };
 
@@ -66,7 +66,7 @@ RadvizViews.prototype.removeDimension = function (idx) {
     d3.selectAll(".dimension-group-" + idx + ",.element-dimension-group-" + idx).remove();
     //this.groups[idx] = -1;
     for (var i = idx + 1; i < this.numberOfGroups; ++i) {
-        console.log("Change: " + i);
+        //console.log("Change: " + i);
 
         d3.select(".dimension-group-" + i).transition().duration(600).attr("r", this.groups[i - 1].radius);
 
@@ -90,7 +90,7 @@ RadvizViews.prototype.removeDimension = function (idx) {
     }
     this.groups.pop();
     this.numberOfGroups--;
-    console.log(this.groups);
+    //console.log(this.groups);
 };
 
 RadvizViews.prototype.getSmallestCircleRadius = function () {
@@ -118,7 +118,7 @@ RadvizViews.prototype.init = function () {
     this.svg.on('mouseup', function () {
         _this.drag.dragging = false;
         _this.drag.element = "";
-        console.log(_this.groups[0].dimensions[0].pos);
+        //console.log(_this.groups[0].dimensions[0].pos);
         d3.selectAll(".dimension").classed("selected", false);
     });
 

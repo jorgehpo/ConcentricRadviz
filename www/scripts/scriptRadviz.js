@@ -1,4 +1,4 @@
-//scriptRadviz.js
+//scriptRadviz.js #main function called from R shiny
 
 var networdOutputBindingRadviz = new Shiny.OutputBinding();
 $.extend(networdOutputBindingRadviz, {
@@ -10,51 +10,29 @@ $.extend(networdOutputBindingRadviz, {
         var radViews = new RadvizViews(el, {diameter: 800, circleOffset: 20});
         var radInterface = new RadvizInterface(radViews);
         var tooltip = new Tooltip();
-
-        radInterface.addDimension("A","a");
-        radInterface.addDimension("B","b");
-        radInterface.addDimension("C","c");
-        radInterface.addDimension("D","d");
-
+        var dimensionsStr = Object.keys(info.data);
+        dimensionsStr.forEach(function(str,id){
+            //radInterface.addDimension(String.fromCharCode('A'.charCodeAt(0)+id),str);
+            radInterface.addDimension(str,str); //Eh pra colocar 'A', depois
+        });
         radInterface.addGroup("Group 1","#27ae60");
         radInterface.addGroup("Group 2","#16a085");
 
-        radInterface.addDimensionToGroup(0,0);
-        radInterface.addDimensionToGroup(1,0);
-        radInterface.addDimensionToGroup(3,1);
-        //-----------------------------
-        //-Código de Exemplo
-        /*
-         radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 1","#27ae60",[{name: "A", pos: 0},{name: "B", pos: 90},{name: "C", pos: 180},{name: "D", pos: 270}]));
-         radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 2","#16a085",[{name: "E", pos: 45},{name: "F", pos: 135},{name: "G", pos: 225}]));
-         radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 3","#2980b9",[{name: "H", pos: 30},{name: "I", pos: 195},{name: "J", pos: 260}]));
-
-         setTimeout(function () {
-         radViews.removeDimension(1);
-         },1500);
-         setTimeout(function () {
-         radViews.addDimensionsGroup(new RadvizDimensionGroup("Group 4","#16a085",[{name: "W", pos: 60},{name: "Y", pos: 145},{name: "Z", pos: 230}]));
-         },2500);
-
-         */
-
         //%%%%%%%%%%%%%%%%% RADVIZ AND PLOTTING %%%%%%%%%%%%%%%%%%%%%%%
-        var columnsGenre = ["genre_tzanetakis.blu", "genre_tzanetakis.cla", "genre_tzanetakis.cou", "genre_tzanetakis.dis", "genre_tzanetakis.hip", "genre_tzanetakis.jaz", "genre_tzanetakis.met", "genre_tzanetakis.pop", "genre_tzanetakis.reg", "genre_tzanetakis.roc"];
-
-        var columnsHumor = ["mood_acoustic.acoustic", "mood_aggressive.aggressive", "mood_electronic.electronic", "mood_happy.happy", "mood_party.party", "mood_relaxed.relaxed", "mood_sad.sad"];
-
-        var mydat = selectColumns(info.data, Object.keys(info.data));
-
         var smallestCircle = radViews.getSmallestCircleRadius();
 
-        console.log(Object.keys(info.data))
-        var anchors = computeAnchors(info.data, Object.keys(info.data));
-        //anchors = [{name: 'A', pos: 0}, {name: 'B', pos: 67}];
+        var columnsGenre = ["genre_tzanetakis.blu", "genre_tzanetakis.cla", "genre_tzanetakis.cou", "genre_tzanetakis.dis", "genre_tzanetakis.hip", "genre_tzanetakis.jaz", "genre_tzanetakis.met", "genre_tzanetakis.pop", "genre_tzanetakis.reg", "genre_tzanetakis.roc"];
+        var columnsHumor = ["mood_acoustic.acoustic", "mood_aggressive.aggressive", "mood_electronic.electronic", "mood_happy.happy", "mood_party.party", "mood_relaxed.relaxed", "mood_sad.sad"];
+
+        var anchors = [{name: "A", pos: 0},{name: "B", pos: 90},{name: "C", pos: 180},{name: "D", pos: 270}];
+
+        var anchors2 = [{name: "Z", pos: 180},{name: "F", pos: 270}];
 
         radViews.addDimensionsGroup(new RadvizDimensionGroup("Genre", "#27ae60", anchors));
 
-        var rad = radviz(mydat, info.tags.filename);
+        radViews.addDimensionsGroup(new RadvizDimensionGroup("Mood", "#0033CC", anchors2));
 
+        var radviz = new Radviz(info.data, columnsGenre, info.tags.filename);
 
         var xValue = function (d) {
             return d.x;
@@ -73,7 +51,7 @@ $.extend(networdOutputBindingRadviz, {
 
 
         radViews.getSvg().selectAll(".dot")
-            .data(rad)
+            .data(radviz.computeProjection())
             .enter().append("circle")
             .attr("class", "dot")
             .attr("r", 3.5)
@@ -93,5 +71,3 @@ $.extend(networdOutputBindingRadviz, {
 })//extend networkOutputBindingRadviz
 
 Shiny.outputBindings.register(networdOutputBindingRadviz, 'binding.radviz');
-  
-

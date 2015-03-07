@@ -13,15 +13,14 @@ shinyUI(
       tags$script(type="text/javascript", src="jquery.ui/jquery-ui.min.js"),
       tags$script(type="text/javascript", src= "scripts/Tooltip.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizInterface.js"),
-      tags$script(type="text/javascript", src= "scripts/RadvizCore.js"),
+      tags$script(type="text/javascript", src= "scripts/Radviz.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizViews.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizDimensionGroup.js"),
       tags$script(type="text/javascript", src= "scripts/scriptRadviz.js")
-      
     ),
     titlePanel("Concentric Radviz"),
     sidebarLayout(
-      sidebarPanel("Menu pra colocar alguma coisa",
+      sidebarPanel(
         selectInput(inputId = "n_breaks",
               label = "Dataset:",
               choices = c("Dataset 1", "Dataset 2", "Dataset 3", "Dataset 4"),

@@ -29,7 +29,7 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.dimensions[dimensionId].group = groupId;
     this.dimensionsGroups[groupId].dimensions.push(dimensionId);
     this.draw();
-    console.log(this.dimensionsGroups);
+    //console.log(this.dimensionsGroups);
 };
 
 RadvizInterface.prototype.removeDimensionFromGroup = function (dimensionId) {
@@ -38,11 +38,11 @@ RadvizInterface.prototype.removeDimensionFromGroup = function (dimensionId) {
         var oldGroup = this.dimensions[dimensionId].group;
         this.dimensions[dimensionId].available = true;
         this.dimensions[dimensionId].group = false;
-        console.log("Dimension Id: " + dimensionId);
-        console.log("Old group: " + oldGroup);
-        console.log(this.dimensionsGroups[oldGroup]);
+        //console.log("Dimension Id: " + dimensionId);
+        //console.log("Old group: " + oldGroup);
+        //console.log(this.dimensionsGroups[oldGroup]);
         var index = this.dimensionsGroups[oldGroup].dimensions.indexOf(parseInt(dimensionId));
-        console.log("Index: " + index);
+        //console.log("Index: " + index);
         if (index > -1) {
             this.dimensionsGroups[oldGroup].dimensions.splice(index,1);
         }
