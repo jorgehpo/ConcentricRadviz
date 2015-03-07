@@ -166,8 +166,12 @@ RadvizViews.prototype.drawDimensions = function () {
 };
 
 RadvizViews.prototype.getSmallestCircleRadius = function () {
-    if (this.numberOfGroups == 0) return this.options.maxCircleRadius;
-    return this.groups[this.numberOfGroups - 1].radius;
+    for (var i = (this.groups.length-1); i >=0 ; --i) {
+        if (this.groups[i]) {
+            return this.groups[i].radius - this.options.circleOffset;
+        }
+    }
+    return this.options.maxCircleRadius - this.options.circleOffset;
 };
 
 RadvizViews.prototype.init = function () {
