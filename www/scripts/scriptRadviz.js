@@ -7,16 +7,8 @@ $.extend(networdOutputBindingRadviz, {
     },
     renderValue: function (el, info) {
 
-        var radViews = new RadvizViews(el, {diameter: 800, circleOffset: 20});
-        var radInterface = new RadvizInterface(radViews);
+        window.radInterface = new RadvizInterface(new RadvizViews(el, {diameter: 800, circleOffset: 20}));
         var tooltip = new Tooltip();
-        var dimensionsStr = Object.keys(info.data);
-        dimensionsStr.forEach(function(str,id){
-            //radInterface.addDimension(String.fromCharCode('A'.charCodeAt(0)+id),str);
-            radInterface.addDimension(str,str); //Eh pra colocar 'A', depois
-        });
-        radInterface.addGroup("Group 1","#27ae60");
-        radInterface.addGroup("Group 2","#16a085");
 
         //%%%%%%%%%%%%%%%%% RADVIZ AND PLOTTING %%%%%%%%%%%%%%%%%%%%%%%
         var smallestCircle = radViews.getSmallestCircleRadius();
@@ -24,11 +16,22 @@ $.extend(networdOutputBindingRadviz, {
         var columnsGenre = ["genre_tzanetakis.blu", "genre_tzanetakis.cla", "genre_tzanetakis.cou", "genre_tzanetakis.dis", "genre_tzanetakis.hip", "genre_tzanetakis.jaz", "genre_tzanetakis.met", "genre_tzanetakis.pop", "genre_tzanetakis.reg", "genre_tzanetakis.roc"];
         var columnsHumor = ["mood_acoustic.acoustic", "mood_aggressive.aggressive", "mood_electronic.electronic", "mood_happy.happy", "mood_party.party", "mood_relaxed.relaxed", "mood_sad.sad"];
 
-        var anchors = [{name: "A", pos: 0},{name: "B", pos: 90},{name: "C", pos: 180},{name: "D", pos: 270}];
+        columnsHumor.forEach(function (item,idx) {
+            //addDimension( id : number, name_circle: small, name_attribute: name)
+            radInterface.addDimension(idx,idx,item);
+        });
+        //Obter posição de uma dimensão
+        //radInterface.getDimensionPosition(dimension_id);
 
-        var anchors2 = [{name: "Z", pos: 180},{name: "F", pos: 270}];
+        var mydat = selectColumns(info.data, Object.keys(info.data));
 
-        radViews.addDimensionsGroup(new RadvizDimensionGroup("Genre", "#27ae60", anchors));
+        var smallestCircle = radInterface.getSmallestCircleRadius();
+
+        console.log(Object.keys(info.data));
+        var anchors = computeAnchors(info.data, Object.keys(info.data));
+        //anchors = [{name: 'A', pos: 0}, {name: 'B', pos: 67}];
+
+        console.log(anchors);
 
         radViews.addDimensionsGroup(new RadvizDimensionGroup("Mood", "#0033CC", anchors2));
 
@@ -50,8 +53,8 @@ $.extend(networdOutputBindingRadviz, {
         };
 
 
-        radViews.getSvg().selectAll(".dot")
-            .data(radviz.computeProjection())
+        radInterface.getSvg().selectAll(".dot")
+            .data(rad)
             .enter().append("circle")
             .attr("class", "dot")
             .attr("r", 3.5)
