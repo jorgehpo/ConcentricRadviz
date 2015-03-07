@@ -11,7 +11,6 @@ Radviz.prototype.setAnchors = function(anchors) {
     //compute matrix data again, from data and columns
     var colNames = [];
     this.anchorAngles = [];
-
     var _this = this;
     anchors.forEach(function(a){
         if (!a.available) {
@@ -41,9 +40,8 @@ Radviz.prototype.anglesToXY = function(){ //transform this.anchorAngles to posit
         var rotMat = [[Math.cos(angle), -Math.sin(angle)], [Math.sin(angle), Math.cos(angle)]];
         anchorMatrix.push(numeric.dot(rotMat,initPoint));
     });
-    console.log(anchorMatrix);
     return anchorMatrix;
-}
+};
 
 Radviz.prototype.computeProjection = function() {
 

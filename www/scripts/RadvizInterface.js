@@ -16,6 +16,11 @@ function RadvizInterface(radviz,radViews) {
         //addDimension( id : number, name_circle: small name, name_attribute: complete name)
         _this.addDimension(idx,idx,item);
     });
+    var _this = this;
+    this.radvizViews.setUpdateDimensions(function () {
+        _this.radviz.updateAnchors(_this.dimensions);
+        _this.drawPoints();
+    });
 }
 
 RadvizInterface.prototype.getRadviz = function () {
