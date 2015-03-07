@@ -37,6 +37,7 @@ shinyUI(
         ),
       width=3),
       mainPanel(RadvizCanvas("myCanvas"),width=7)
-    )
+    ),
+    includeHTML("modal.html")
   )
 )

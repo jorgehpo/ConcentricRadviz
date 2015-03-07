@@ -53,7 +53,7 @@ RadvizViews.prototype.removeDimensionsGroup = function (idx) {
             d3.selectAll(".element-dimension-group-" + i + " text").each(function (d, i) {
                 d3.select(this).transition()
                     .duration(600)
-                    .attr("transform", "translate(" + newRadius + ",0) rotate(" + (180 - d3.select(this).attr("data-pos")) + ") scale(-1,1)");
+                    .attr("transform", function (d) { console.log(d); return "translate(" + newRadius + ",0) rotate(" + (180 - d3.select(this).attr("data-pos")) + ") scale(-1,1)"});
             });
             countValidCircles++;
         }
@@ -159,7 +159,7 @@ RadvizViews.prototype.drawDimensions = function () {
             }
             _this.groups[group].dimensions[element].pos = (arc / (Math.PI / 180));
             d3.select("." + _this.drag.element).attr("transform", "rotate(" + (arc / (Math.PI / 180)) + ")");
-            d3.select("." + _this.drag.element + " text").attr("data-pos", (180 - (arc / (Math.PI / 180))));
+            d3.select("." + _this.drag.element + " text").attr("data-pos", (arc / (Math.PI / 180)));
             d3.select("." + _this.drag.element + " text").attr("transform", "translate(" + _this.groups[group].radius + ",0) rotate(" + (180 - (arc / (Math.PI / 180))) + ") scale(-1,1)");
         }
     });
