@@ -10,10 +10,14 @@ function Radviz(data, tooltip){
 Radviz.prototype.setAnchors = function(anchors) {
     //compute matrix data again, from data and columns
     var colNames = [];
-
+    this.anchorAngles = [];
+    console.log(anchors[0]);
+    var _this = this
     anchors.forEach(function(a){
-        if (!a.available)
+        if (!a.available) {
             colNames.push(a.attribute);
+            _this.anchorAngles.push((a.pos*Math.PI)/360); //converts from degree (D3) to radians (js math)
+        }
     });
     this.matrix = this.selectColumns(colNames);
 };
@@ -23,21 +27,24 @@ Radviz.prototype.updateAnchors = function(anchors) {
     console.log(anchors);
 };
 
+Radviz.prototype.anglesToXY = function(){ //transform this.anchorAngles to position matrix[[x,y]] and returns
+    var initPoint = [1,0];
+    var anchorMatrix = [];
+    this.anchorAngles.forEach(function(angle){
+        var rotMat = [[Math.cos(angle), -Math.sin(angle)], [Math.sin(angle), Math.cos(angle)]];
+        anchorMatrix.push(numeric.dot(rotMat,initPoint));
+    });
+    return anchorMatrix;
+}
+
 Radviz.prototype.computeProjection = function() {
+
     if (this.matrix[0].length == 0){
         //throw "Error: Data matrix not available.";
         return ([]);
     }
-    var nAnchors = this.matrix[0].length;
-    var angle = 2 * Math.PI / nAnchors;
-    var rotMat = [[Math.cos(angle), -Math.sin(angle)], [Math.sin(angle), Math.cos(angle)]];
 
-    var anchors = [[1, 0]];
-
-    for (var i = 1; i < nAnchors; i++) {
-        var newAnchor = numeric.dot(rotMat, anchors[i - 1]);
-        anchors.push(newAnchor);
-    }
+    var anchors = this.anglesToXY();
 
 
     var nrow = this.matrix.length;
