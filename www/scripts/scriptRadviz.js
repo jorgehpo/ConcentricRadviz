@@ -7,21 +7,15 @@ $.extend(networdOutputBindingRadviz, {
     },
     renderValue: function (el, info) {
 
-        var radViews = new RadvizViews(el, {diameter: 800, circleOffset: 20});
-        var radInterface = new RadvizInterface(radViews);
+        window.radInterface = new RadvizInterface(new RadvizViews(el, {diameter: 800, circleOffset: 20}));
         var tooltip = new Tooltip();
 
-        radInterface.addDimension("A","a");
-        radInterface.addDimension("B","b");
-        radInterface.addDimension("C","c");
-        radInterface.addDimension("D","d");
-
-        radInterface.addGroup("Group 1","#27ae60");
-        radInterface.addGroup("Group 2","#16a085");
-
-        radInterface.addDimensionToGroup(0,0);
-        radInterface.addDimensionToGroup(1,0);
-        radInterface.addDimensionToGroup(3,1);
+        //radInterface.addGroup("Group 1","#27ae60");
+        //radInterface.addGroup("Group 2","#16a085");
+        //
+        //radInterface.addDimensionToGroup(0,0);
+        //radInterface.addDimensionToGroup(1,0);
+        //radInterface.addDimensionToGroup(3,1);
         //-----------------------------
         //-Código de Exemplo
         /*
@@ -43,15 +37,21 @@ $.extend(networdOutputBindingRadviz, {
 
         var columnsHumor = ["mood_acoustic.acoustic", "mood_aggressive.aggressive", "mood_electronic.electronic", "mood_happy.happy", "mood_party.party", "mood_relaxed.relaxed", "mood_sad.sad"];
 
+        columnsHumor.forEach(function (item,idx) {
+            radInterface.addDimension(idx,item);
+        });
+
         var mydat = selectColumns(info.data, Object.keys(info.data));
 
-        var smallestCircle = radViews.getSmallestCircleRadius();
+        var smallestCircle = radInterface.radvizViews.getSmallestCircleRadius();
 
         console.log(Object.keys(info.data))
         var anchors = computeAnchors(info.data, Object.keys(info.data));
         //anchors = [{name: 'A', pos: 0}, {name: 'B', pos: 67}];
 
-        radViews.addDimensionsGroup(new RadvizDimensionGroup("Genre", "#27ae60", anchors));
+        console.log(anchors);
+
+        //radViews.addDimensionsGroup(new RadvizDimensionGroup("Genre", "#27ae60", anchors));
 
         var rad = radviz(mydat, info.tags.filename);
 
@@ -72,7 +72,7 @@ $.extend(networdOutputBindingRadviz, {
         };
 
 
-        radViews.getSvg().selectAll(".dot")
+        radInterface.radvizViews.getSvg().selectAll(".dot")
             .data(rad)
             .enter().append("circle")
             .attr("class", "dot")
