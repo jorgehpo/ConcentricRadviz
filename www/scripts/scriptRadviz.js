@@ -16,8 +16,11 @@ $.extend(networdOutputBindingRadviz, {
         var columnsHumor = ["mood_acoustic.acoustic", "mood_aggressive.aggressive", "mood_electronic.electronic", "mood_happy.happy", "mood_party.party", "mood_relaxed.relaxed", "mood_sad.sad"];
 
         columnsHumor.forEach(function (item,idx) {
-            radInterface.addDimension(idx,item);
+            //addDimension( id : number, name_circle: small, name_attribute: name)
+            radInterface.addDimension(idx,idx,item);
         });
+        //Obter posição de uma dimensão
+        //radInterface.getDimensionPosition(dimension_id);
 
         var mydat = selectColumns(info.data, Object.keys(info.data));
 

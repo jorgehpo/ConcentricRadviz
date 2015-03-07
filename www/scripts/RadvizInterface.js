@@ -19,9 +19,9 @@ RadvizInterface.prototype.getSmallestCircleRadius = function () {
     return this.radvizViews.getSmallestCircleRadius();
 };
 
-RadvizInterface.prototype.addDimension = function (name,attribute) {
-    var dim = {id: this.uniqueDimensionsCount,name: name,attribute: attribute,available: true,group: false,pos: 0};
-    this.dimensions[this.uniqueDimensionsCount] = dim;
+RadvizInterface.prototype.addDimension = function (id,name,attribute) {
+    var dim = {id: id,name: name,attribute: attribute,available: true,group: false,pos: 0};
+    this.dimensions[id] = dim;
     this.uniqueDimensionsCount++;
     this.draw();
 };

@@ -55,7 +55,6 @@ RadvizViews.prototype.removeDimensionsGroup = function (idx) {
             countValidCircles++;
         }
     }
-    console.log(this.groups);
 };
 
 RadvizViews.prototype.addDimensionToGroup = function (dimension,groupId) {
