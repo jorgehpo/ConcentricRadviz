@@ -11,29 +11,19 @@ $.extend(networdOutputBindingRadviz, {
         var tooltip = new Tooltip();
 
         //%%%%%%%%%%%%%%%%% RADVIZ AND PLOTTING %%%%%%%%%%%%%%%%%%%%%%%
-        var smallestCircle = radViews.getSmallestCircleRadius();
-
         var columnsGenre = ["genre_tzanetakis.blu", "genre_tzanetakis.cla", "genre_tzanetakis.cou", "genre_tzanetakis.dis", "genre_tzanetakis.hip", "genre_tzanetakis.jaz", "genre_tzanetakis.met", "genre_tzanetakis.pop", "genre_tzanetakis.reg", "genre_tzanetakis.roc"];
-        var columnsHumor = ["mood_acoustic.acoustic", "mood_aggressive.aggressive", "mood_electronic.electronic", "mood_happy.happy", "mood_party.party", "mood_relaxed.relaxed", "mood_sad.sad"];
+        //var columnsHumor = ["mood_acoustic.acoustic", "mood_aggressive.aggressive", "mood_electronic.electronic", "mood_happy.happy", "mood_party.party", "mood_relaxed.relaxed", "mood_sad.sad"];
 
-        columnsHumor.forEach(function (item,idx) {
-            //addDimension( id : number, name_circle: small, name_attribute: name)
+        var dimensionNames = Object.keys(info.data);
+
+        dimensionNames.forEach(function (item,idx) {
+            //addDimension( id : number, name_circle: small name, name_attribute: complete name)
             radInterface.addDimension(idx,idx,item);
         });
         //Obter posição de uma dimensão
         //radInterface.getDimensionPosition(dimension_id);
 
-        var mydat = selectColumns(info.data, Object.keys(info.data));
-
         var smallestCircle = radInterface.getSmallestCircleRadius();
-
-        console.log(Object.keys(info.data));
-        var anchors = computeAnchors(info.data, Object.keys(info.data));
-        //anchors = [{name: 'A', pos: 0}, {name: 'B', pos: 67}];
-
-        console.log(anchors);
-
-        radViews.addDimensionsGroup(new RadvizDimensionGroup("Mood", "#0033CC", anchors2));
 
         var radviz = new Radviz(info.data, columnsGenre, info.tags.filename);
 
@@ -54,7 +44,7 @@ $.extend(networdOutputBindingRadviz, {
 
 
         radInterface.getSvg().selectAll(".dot")
-            .data(rad)
+            .data(radviz.computeProjection())
             .enter().append("circle")
             .attr("class", "dot")
             .attr("r", 3.5)
@@ -72,5 +62,6 @@ $.extend(networdOutputBindingRadviz, {
             });
     }//renderValue function
 })//extend networkOutputBindingRadviz
+
 
 Shiny.outputBindings.register(networdOutputBindingRadviz, 'binding.radviz');
