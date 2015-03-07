@@ -2,6 +2,16 @@ function Radviz(data, columns, tooltip){
         this.setData(data,columns, tooltip);
 }
 
+Radviz.prototype.setAnchors = function(anchors) {
+    console.log("setAnchors");
+    console.log(anchors);
+};
+
+Radviz.prototype.updateAnchors = function(anchors) {
+    console.log("setAnchors");
+    console.log(anchors);
+};
+
 Radviz.prototype.computeProjection = function() {
     if (!this.matrix){
         throw "Error: Data matrix not available.";
@@ -99,4 +109,8 @@ Radviz.prototype.createAnchors = function(data, columns) {
         anchors[i] = {name: nextChar(anchors[i-1].name), pos: newPos, description: columns[i]};
     }
     return (anchors);
+};
+
+Radviz.prototype.getDimensionNames = function () {
+    return Object.keys(this.data);
 };

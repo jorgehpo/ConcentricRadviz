@@ -1,7 +1,9 @@
 var COLORSCALE = ["#1abc9c","#c0392b","#3498db","#9b59b6","#7f8c8d","#d35400","#2ecc71","#34495e","#f39c12","#bdc3c7","#f1c40f","#2c3e50","#e74c3c","#16a085","#95a5a6","#8e44ad","#27ae60","#e67e22","#2980b9"];
 
-function RadvizInterface(radViews) {
+function RadvizInterface(radviz,radViews) {
+    this.radviz = radviz;
     this.radvizViews = radViews;
+    this.tooltip = new Tooltip();
     this.dimensionsElement = $(".sidebar-dimensions-list");
     this.dimensions = [];
     this.dimensionsGroups = [];
@@ -9,7 +11,16 @@ function RadvizInterface(radViews) {
     this.uniqueDimensionsCount = 0;
     this.uniqueGroupsCount = 0;
     this.uniqueRemovedGroupsCount = 0;
+    var _this = this;
+    this.radviz.getDimensionNames().forEach(function (item,idx) {
+        //addDimension( id : number, name_circle: small name, name_attribute: complete name)
+        _this.addDimension(idx,idx,item);
+    });
 }
+
+RadvizInterface.prototype.getRadviz = function () {
+    return this.radviz;
+};
 
 RadvizInterface.prototype.getSvg = function () {
     return this.radvizViews.getSvg();
@@ -52,6 +63,7 @@ RadvizInterface.prototype.removeGroup = function (groupId) {
         this.uniqueRemovedGroupsCount = 0;
         this.dimensionsGroups = [];
     }
+    this.radviz.setAnchors(this.dimensions);
     this.draw();
 };
 
@@ -62,6 +74,7 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.dimensions[dimensionId].group = groupId;
     this.dimensionsGroups[groupId].dimensions.push(dimensionId);
     this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
+    this.radviz.setAnchors(this.dimensions);
     this.draw();
 };
 
@@ -75,6 +88,7 @@ RadvizInterface.prototype.removeDimensionFromGroup = function (dimensionId) {
         if (index > -1) {
             this.dimensionsGroups[oldGroup].dimensions.splice(index,1);
             this.radvizViews.removeDimensionFromGroup(dimensionId,oldGroup);
+            this.radviz.setAnchors(this.dimensions);
         }
         this.draw();
     }
@@ -143,4 +157,42 @@ RadvizInterface.prototype.draw = function () {
     $(".sidebar-groups-list-item-remove").on("click",function () {
         _this.removeGroup($(this).attr("data-group-id"));
     });
+};
+
+RadvizInterface.prototype.drawPoints = function () {
+    var smallestCircle = this.getSmallestCircleRadius();
+
+    var xValue = function (d) {
+        return d.x;
+    };
+    var xScale = d3.scale.linear().range([-smallestCircle, smallestCircle]).domain([-1, 1]);//input domain, output range
+    var xMap = function (d) {
+        return xScale(xValue(d));
+    };
+    var yValue = function (d) {
+        return d.y;
+    };
+    var yScale = d3.scale.linear().range([-smallestCircle, smallestCircle]).domain([-1, 1]);//input domain, output range
+    var yMap = function (d) {
+        return yScale(yValue(d));
+    };
+
+
+    radInterface.getSvg().selectAll(".dot")
+        .data(this.radviz.computeProjection())
+        .enter().append("circle")
+        .attr("class", "dot")
+        .attr("r", 3.5)
+        .attr("cx", xMap)
+        .attr("cy", yMap)
+        .on("mouseover", function (d) {
+            if (d.tip) {
+                this.tooltip.show(d.tip);
+            }
+        })
+        .on("mouseout", function (d) {
+            if (d.tip) {
+                this.tooltip.hide();
+            }
+        });
 };
