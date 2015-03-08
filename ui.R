@@ -21,11 +21,22 @@ shinyUI(
     titlePanel("Concentric Radviz"),
     sidebarLayout(
       sidebarPanel(
-        selectInput(inputId = "n_breaks",
-              label = "Dataset:",
-              choices = c("Dataset 1", "Dataset 2", "Dataset 3", "Dataset 4"),
-              selected = "Dataset 1"
+        fileInput('file1', 'Choose file to upload',
+                  accept = c(
+                    'text/csv',
+                    'text/comma-separated-values',
+                    'text/tab-separated-values',
+                    'text/plain',
+                    '.csv',
+                    '.tsv'
+                  )
         ),
+        tags$hr(),
+        #selectInput(inputId = "n_breaks",
+        #      label = "Dataset:",
+        #      choices = c("Dataset 1", "Dataset 2", "Dataset 3", "Dataset 4"),
+        #      selected = "Dataset 1"
+        #),
         tags$div(class="sidebar-dimensions", checked=NA,
               tags$p("Available Dimensions:"),
               tags$div(class="sidebar-dimensions-list")

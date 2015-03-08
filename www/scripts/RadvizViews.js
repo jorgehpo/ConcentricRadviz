@@ -161,6 +161,12 @@ RadvizViews.prototype.drawDimensions = function () {
             d3.select("." + _this.drag.element).attr("transform", "rotate(" + (arc / (Math.PI / 180)) + ")");
             d3.select("." + _this.drag.element + " text").attr("data-pos", (arc / (Math.PI / 180)));
             d3.select("." + _this.drag.element + " text").attr("transform", "translate(" + _this.groups[group].radius + ",0) rotate(" + (180 - (arc / (Math.PI / 180))) + ") scale(-1,1)");
+
+            //Update point positions on mouse move
+            d3.selectAll(".dimension").classed("selected", false);
+            if (_this.updateDimensions) {
+                _this.updateDimensions();
+            }
         }
     });
 };

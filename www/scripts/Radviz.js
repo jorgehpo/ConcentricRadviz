@@ -19,6 +19,13 @@ Radviz.prototype.setAnchors = function(anchors) {
         }
     });
     this.matrix = this.selectColumns(colNames);
+
+    this.yi = []; //used in computeProjection method. Only needs to be updated when data changes
+    this.matrix.forEach(function (x){
+        var aux_yi = numeric.sum(x);
+        if (aux_yi == 0) aux_yi = 1;
+        _this.yi.push(aux_yi);
+    });
 };
 
 Radviz.prototype.updateAnchors = function(anchors) {
@@ -57,15 +64,13 @@ Radviz.prototype.computeProjection = function() {
     var ncol = this.matrix[0].length;
     var proj = [];
     for (var i = 0; i < nrow; i++) {
-        var yi = numeric.sum(this.matrix[i]);
-        if (yi == 0) yi = 1;
         var _x = 0, _y = 0;
         for (var j = 0; j < ncol; j++) {
             _x = _x + anchors[j][0] * this.matrix[i][j];
             _y = _y + anchors[j][1] * this.matrix[i][j];
         }
-        _x = _x / yi;
-        _y = _y / yi;
+        _x = _x / this.yi[i];
+        _y = _y / this.yi[i];
         if (this.tooltip) {
             proj.push({x: _x, y: _y, tip: this.tooltip[i]});
         } else {
