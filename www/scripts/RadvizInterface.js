@@ -109,7 +109,7 @@ RadvizInterface.prototype.getDimensionPosition = function (dimensionId) {
     } else {
         var groupId = dim.group;
         var pos = dim.pos;
-        return {group: groupId,position: pos};
+        return {group: groupId,position: pos,weight: dim.weight};
     }
 };
 
@@ -121,17 +121,19 @@ RadvizInterface.prototype.draw = function () {
         if (d) {
             $(".sidebar-groups-list").append("<div data-group-id='" + i + "' class='sidebar-groups-list-item sidebar-groups-list-item-" + i + "' style='background-color: " + d.color + "'>" +
                                              "<div data-group-id='" + i + "' class='sidebar-groups-list-item-element sidebar-groups-list-item-remove'>x</div>" +
-                                             "<div class='sidebar-groups-list-item-element sidebar-groups-list-item-title'>" + d.name + "</div></div>");
+                                             "<div data-group-id='" + i + "' class='sidebar-groups-list-item-element sidebar-groups-list-item-element-group-" + i + " sidebar-groups-list-item-title'>" + d.name + "</div></div>");
             d.dimensions.forEach(function (e) {
-                $(".sidebar-groups-list-item-" + i).append("<div data-dimension-id='" + e + "' class='sidebar-groups-list-item-element droppable-element'>" + _this.dimensions[e].attribute + "</div>");
+                $(".sidebar-groups-list-item-" + i).append("<div data-dimension-id='" + e + "' class='sidebar-groups-list-item-dimension-" + e + " sidebar-groups-list-item-element droppable-element'>" + _this.dimensions[e].attribute + "</div>");
             });
         }
     });
-
+    $(".sidebar-groups-list-item-element").off("click");
     $(".sidebar-groups-list-item-element").on("click", function () {
-        $("#dimensionSlider").removeClass("hidden");
-        $(".sidebar-groups-list-item-element").removeClass("selected");
-        $(this).addClass("selected");
+        _this.activeDimensionSlider($(this).attr("data-dimension-id"));
+    });
+    $(".sidebar-groups-list-item-title").off("click");
+    $(".sidebar-groups-list-item-title").on("click", function () {
+        _this.activeGroupSlider($(this).attr("data-group-id"));
     });
     this.dimensions.forEach(function (d,i) {
         if (d.available) {
@@ -149,6 +151,7 @@ RadvizInterface.prototype.draw = function () {
             var group = $(this).attr("data-group-id");
             _this.removeDimensionFromGroup(dimension);
             _this.addDimensionToGroup(dimension,group);
+            _this.hideDimensionSlider();
             _this.draw();
         }
     });
@@ -159,6 +162,7 @@ RadvizInterface.prototype.draw = function () {
         drop: function( event, ui ) {
             var dimension = ui.draggable.attr("data-dimension-id");
             _this.removeDimensionFromGroup(dimension);
+            _this.hideDimensionSlider();
             _this.draw();
         }
     });
@@ -213,4 +217,39 @@ RadvizInterface.prototype.drawPoints = function () {
                 }
             });
     }
+};
+
+RadvizInterface.prototype.activeDimensionSlider = function (dimensionId) {
+    $("#dimensionSlider").removeClass("hidden");
+    $(".sidebar-groups-list-item-element").removeClass("selected");
+    $(".sidebar-groups-list-item-dimension-" + dimensionId).addClass("selected");
+    $("#dimensionSlider label").html(this.dimensions[dimensionId].attribute + " weight: ");
+    var slider = $("#dimensionSliderController").data("ionRangeSlider");
+    var _this = this;
+    slider.update({from: parseFloat(this.dimensions[dimensionId].weight),onChange: function (data) {
+        var newWeight = parseFloat(data.from);
+        _this.dimensions[dimensionId].weight = newWeight;
+        _this.radvizViews.updateDimensions();
+    }});
+};
+
+
+RadvizInterface.prototype.activeGroupSlider = function (groupId) {
+    $("#dimensionSlider").removeClass("hidden");
+    $(".sidebar-groups-list-item-element").removeClass("selected");
+    $(".sidebar-groups-list-item-element-group-" + groupId).addClass("selected");
+    $("#dimensionSlider label").html(this.dimensionsGroups[groupId].name + " weight: ");
+    var slider = $("#dimensionSliderController").data("ionRangeSlider");
+    var _this = this;
+    slider.update({from: parseFloat(1.0),onChange: function (data) {
+        var newWeight = parseFloat(data.from);
+        _this.dimensionsGroups[groupId].dimensions.forEach(function (dim,idx) {
+            _this.dimensions[dim].weight = newWeight;
+        });
+        _this.radvizViews.updateDimensions();
+    }});
+};
+
+RadvizInterface.prototype.hideDimensionSlider = function () {
+    $("#dimensionSlider").addClass("hidden");
 };
