@@ -36,7 +36,7 @@ RadvizInterface.prototype.getSmallestCircleRadius = function () {
 };
 
 RadvizInterface.prototype.addDimension = function (id,name,attribute) {
-    var dim = {id: id,name: name,attribute: attribute,available: true,group: false,pos: 0};
+    var dim = {id: id,name: name,attribute: attribute,available: true,group: false,pos: 0,weight: 1};
     this.dimensions[id] = dim;
     this.uniqueDimensionsCount++;
     this.draw();
@@ -126,6 +126,12 @@ RadvizInterface.prototype.draw = function () {
                 $(".sidebar-groups-list-item-" + i).append("<div data-dimension-id='" + e + "' class='sidebar-groups-list-item-element droppable-element'>" + _this.dimensions[e].attribute + "</div>");
             });
         }
+    });
+
+    $(".sidebar-groups-list-item-element").on("click", function () {
+        $("#dimensionSlider").removeClass("hidden");
+        $(".sidebar-groups-list-item-element").removeClass("selected");
+        $(this).addClass("selected");
     });
     this.dimensions.forEach(function (d,i) {
         if (d.available) {

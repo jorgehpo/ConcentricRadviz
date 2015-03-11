@@ -63,6 +63,10 @@ body {
     font-size: 11px;
 }
 
+.sidebar-groups-list .sidebar-groups-list-item .sidebar-groups-list-item-element.selected {
+    background-color: #888;
+}
+
 .sidebar-groups-list .sidebar-groups-list-item .sidebar-groups-list-item-title {
     background-color: white;
     color: rgba(0, 0, 0, 0.81);
