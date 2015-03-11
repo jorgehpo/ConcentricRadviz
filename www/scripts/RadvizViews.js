@@ -4,7 +4,7 @@ function RadvizViews(el, options) {
     this.options.radius = this.options.diameter / 2;
     this.options.maxCircleRadius = this.options.radius - this.options.circleOffset;
     this.svg = null;
-    this.drag = {dragging: false, element: ""};
+    this.drag = {dragging: false, element: "",group: false,originalPosition: [],originalElementsPosition: []};
     this.groups = [];
     this.numberOfGroups = 0;
     this.updateDimensions = null;
@@ -32,7 +32,19 @@ RadvizViews.prototype.addDimensionsGroup = function (dimensionGroup) {
         .attr("r", dimensionGroup.radius)
         .style("fill", "none")
         .style("stroke", dimensionGroup.color)
-        .style("stroke-width", "6");
+        .style("stroke-width", "6")
+        .style("cursor", "move")
+        .on("mousedown", function () {
+            _this.drag.dragging = true;
+            _this.drag.group = true;
+            _this.drag.originalPosition = d3.mouse(this);
+            _this.drag.originalElementsPosition = [];
+            d3.selectAll(".element-dimension-group-" + dimensionGroup.id).each(function (dim,idx) {
+                _this.drag.originalElementsPosition[idx] = parseFloat(d3.select(this).attr("data-pos"));
+            });
+            _this.drag.element = "dimension-group-" + dimensionGroup.id;
+            d3.selectAll(".dimension-group-" + dimensionGroup.id).classed("selected", true);
+        });//mousewheel;
     this.numberOfGroups++;
 };
 
@@ -105,14 +117,16 @@ RadvizViews.prototype.drawDimensions = function () {
                     .attr('data-dimension', d.id)
                     .attr('data-group', i)
                     .attr("transform", "rotate(" + _this.groups[i].dimensions[di].pos + ")")
+                    .attr("data-pos", _this.groups[i].dimensions[di].pos)
                     .attr("width", 16)
                     .attr("height", 16)
                     .style("cursor", "move")
                     .on("mousedown", function () {
                         _this.drag.dragging = true;
+                        _this.drag.group = false;
                         _this.drag.element = "dimension-" + d.id;
                         d3.selectAll(".dimension-" + d.id).classed("selected", true);
-                    });
+                    });//mousewheel
                 dimG.append("circle")
                     .attr("cx", _this.groups[i].radius)
                     .attr("cy", 0)
@@ -144,28 +158,69 @@ RadvizViews.prototype.drawDimensions = function () {
 
     this.svg.on('mousemove', function () {
         if (_this.drag.dragging) {
+
             var x = d3.mouse(this)[0];
             var y = d3.mouse(this)[1];
-            var element = d3.select("." + _this.drag.element).attr("data-element");
-            var group = d3.select("." + _this.drag.element).attr("data-group");
+            if (!_this.drag.group) {
+                var element = d3.select("." + _this.drag.element).attr("data-element");
+                var group = d3.select("." + _this.drag.element).attr("data-group");
 
-            var hlin = Math.sqrt(x * x + y * y);
-            var ylin = _this.options.maxCircleRadius / hlin * y;
+                var hlin = Math.sqrt(x * x + y * y);
+                var ylin = _this.options.maxCircleRadius / hlin * y;
 
-            var sen = ylin / _this.options.maxCircleRadius;
-            var arc = Math.asin(sen);
-            if (x < 0) {
-                arc = Math.PI - arc;
-            }
-            _this.groups[group].dimensions[element].pos = (arc / (Math.PI / 180));
-            d3.select("." + _this.drag.element).attr("transform", "rotate(" + (arc / (Math.PI / 180)) + ")");
-            d3.select("." + _this.drag.element + " text").attr("data-pos", (arc / (Math.PI / 180)));
-            d3.select("." + _this.drag.element + " text").attr("transform", "translate(" + _this.groups[group].radius + ",0) rotate(" + (180 - (arc / (Math.PI / 180))) + ") scale(-1,1)");
+                var sen = ylin / _this.options.maxCircleRadius;
+                var arc = Math.asin(sen);
+                if (x < 0) {
+                    arc = Math.PI - arc;
+                }
+                _this.groups[group].dimensions[element].pos = (arc / (Math.PI / 180));
+                d3.select("." + _this.drag.element).attr("transform", "rotate(" + (arc / (Math.PI / 180)) + ")");
+                d3.select("." + _this.drag.element).attr("data-pos", (arc / (Math.PI / 180)));
+                d3.select("." + _this.drag.element + " text").attr("data-pos", (arc / (Math.PI / 180)));
+                d3.select("." + _this.drag.element + " text").attr("transform", "translate(" + _this.groups[group].radius + ",0) rotate(" + (180 - (arc / (Math.PI / 180))) + ") scale(-1,1)");
 
-            //Update point positions on mouse move
-            d3.selectAll(".dimension").classed("selected", false);
-            if (_this.updateDimensions) {
-                _this.updateDimensions();
+                //Update point positions on mouse move
+                d3.selectAll(".dimension").classed("selected", false);
+                if (_this.updateDimensions) {
+                    _this.updateDimensions();
+                }
+            } else {
+
+                var hlin = Math.sqrt(x * x + y * y);
+                var ylin = _this.options.maxCircleRadius / hlin * y;
+                var sen = ylin / _this.options.maxCircleRadius;
+                var arc = Math.asin(sen);
+                if (x < 0) {
+                    arc = Math.PI - arc;
+                }
+
+                var x1 = _this.drag.originalPosition[0];
+                var y1 = _this.drag.originalPosition[1];
+                var h1lin = Math.sqrt(x1 * x1 + y1 * y1);
+                var y1lin = _this.options.maxCircleRadius / h1lin * y1;
+                var sen1 = y1lin / _this.options.maxCircleRadius;
+                var arc1 = Math.asin(sen1);
+                if (x1 < 0) {
+                    arc1 = Math.PI - arc1;
+                }
+                var delta = arc - arc1;
+
+                var group = d3.select("." + _this.drag.element).attr("data-dimension-group-id");
+                d3.selectAll(".element-dimension-group-" + group).each(function (dim,idx) {
+                    var element = d3.select(this).attr("data-element");
+                    var pos1 = _this.drag.originalElementsPosition[idx];
+                    pos1 = pos1/180 * Math.PI;
+                    var pos = parseFloat(pos1) + parseFloat(delta);
+                    _this.groups[group].dimensions[element].pos = (pos / (Math.PI / 180));
+                    d3.select(this).attr("data-pos",(pos / (Math.PI / 180)));
+                    d3.select(this).attr("transform", "rotate(" + (pos / (Math.PI / 180)) + ")");
+                    d3.select(this).select("text").attr("data-pos", (pos / (Math.PI / 180)));
+                    d3.select(this).select("text").attr("transform", "translate(" + _this.groups[group].radius + ",0) rotate(" + (180 - (pos / (Math.PI / 180))) + ") scale(-1,1)");
+                    if (_this.updateDimensions) {
+                        _this.updateDimensions();
+                    }
+                });
+
             }
         }
     });
