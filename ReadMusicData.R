@@ -40,8 +40,13 @@ generateDataRecursive <- function(json.folder, genre = "genre_tzanetakis"){
     nums = nums[-ignoreIDs]
     mat[fid,] = nums
   }
-  ret$data = as.data.frame(mat)
-  return (ret)
+  mat = as.data.frame(mat)
+  
+  tooltip = ret$tags$filename
+  
+  mat = cbind(mat,tooltip)
+  
+  return (mat)
 }
 
 

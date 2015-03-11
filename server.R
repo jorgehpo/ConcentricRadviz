@@ -24,6 +24,6 @@ shinyServer(function(input, output,session) {
   output$myCanvas <- reactive(function(){
     if (is.null(input$file1))
       return(NULL)
-    list(data = read.csv(input$file1$datapath))
+    read.csv(input$file1$datapath)
   })
 })
