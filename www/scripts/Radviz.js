@@ -15,12 +15,6 @@ Radviz.prototype.sigmoid = function(x){
     return (1/(1+Math.exp(-10*x+5))); //D = [0,1] Im = [0,1]
 };
 
-Radviz.prototype.setDefaultWeight = function(x){
-    this.defaultWeights = x;
-    this.weights = numeric.rep([this.matrix[0].length],this.defaultWeights);
-    this.compute_yi();
-}
-
 Radviz.prototype.compute_yi = function(){
     this.yi = []; //used in computeProjection method. Only needs to be updated when data changes
     var _this = this;
@@ -42,25 +36,33 @@ Radviz.prototype.setAnchors = function(anchors) {
     var colNames = [];
     this.anchorAngles = [];
     var _this = this;
+    this.weights = [];
     anchors.forEach(function(a){
         if (!a.available) {
             colNames.push(a.attribute);
             _this.anchorAngles.push((a.pos*Math.PI*2)/360); //converts from degree (D3) to radians (js math)
+            _this.weights.push(a.weight);
         }
     });
     this.matrix = this.selectColumns(colNames);
-    this.weights = numeric.rep([this.matrix[0].length],this.defaultWeights);
     this.compute_yi();
 };
 
 Radviz.prototype.updateAnchors = function(anchors) {
     this.anchorAngles = [];
+    this.weights = [];
     var _this = this;
     anchors.forEach(function(a){
         if (!a.available) {
             _this.anchorAngles.push((a.pos*Math.PI*2)/360); //converts from degree (D3) to radians (js math)
+            if (isNaN(a.weight)){
+                _this.weights.push(0);
+            }else{
+                _this.weights.push(a.weight-1);
+            }
         }
     });
+    this.compute_yi();
 };
 
 Radviz.prototype.anglesToXY = function(){ //transform this.anchorAngles to position matrix[[x,y]] and returns
