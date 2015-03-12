@@ -81,7 +81,6 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.dimensionsGroups[groupId].dimensions.push(dimensionId);
     this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
     this.radviz.setAnchors(this.dimensions);
-    console.log(this.dimensions);
     this.drawPoints();
     this.draw();
 };

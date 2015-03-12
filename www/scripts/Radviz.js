@@ -4,7 +4,6 @@ function Radviz(data, tooltip){
         }
         this.data = data;
         this.tooltip = tooltip;
-        this.defaultWeights = 0;
         this.matrix = [[]];
 }
 
@@ -24,7 +23,7 @@ Radviz.prototype.compute_yi = function(){
         //_this.yi.push(aux_yi);
         var aux_yi = 0;
         for (var j = 0; j < x.length; j++){
-            aux_yi += x[j] * (1 + _this.weights[j]*   _this.sigmoid(x[j]));
+            aux_yi += x[j] * (1 + _this.weights[j]* _this.sigmoid(x[j]));
         }
         if (aux_yi == 0) aux_yi = 1;
         _this.yi.push(aux_yi);
@@ -41,7 +40,7 @@ Radviz.prototype.setAnchors = function(anchors) {
         if (!a.available) {
             colNames.push(a.attribute);
             _this.anchorAngles.push((a.pos*Math.PI*2)/360); //converts from degree (D3) to radians (js math)
-            _this.weights.push(a.weight);
+            _this.weights.push(a.weight -1);
         }
     });
     this.matrix = this.selectColumns(colNames);
@@ -76,14 +75,11 @@ Radviz.prototype.anglesToXY = function(){ //transform this.anchorAngles to posit
 };
 
 Radviz.prototype.computeProjection = function() {
-
     if (this.matrix[0].length == 0){
-        //throw "Error: Data matrix not available.";
         return ([]);
     }
 
     var anchors = this.anglesToXY();
-
 
     var nrow = this.matrix.length;
     var ncol = this.matrix[0].length;
