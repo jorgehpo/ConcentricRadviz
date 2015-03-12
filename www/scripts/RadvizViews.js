@@ -65,7 +65,7 @@ RadvizViews.prototype.removeDimensionsGroup = function (idx) {
             d3.selectAll(".element-dimension-group-" + i + " text").each(function (d, i) {
                 d3.select(this).transition()
                     .duration(600)
-                    .attr("transform", function (d) { console.log(d); return "translate(" + newRadius + ",0) rotate(" + (180 - d3.select(this).attr("data-pos")) + ") scale(-1,1)"});
+                    .attr("transform", function (d) {  return "translate(" + newRadius + ",0) rotate(" + (180 - d3.select(this).attr("data-pos")) + ") scale(-1,1)"});
             });
             countValidCircles++;
         }

@@ -81,6 +81,7 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.dimensionsGroups[groupId].dimensions.push(dimensionId);
     this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
     this.radviz.setAnchors(this.dimensions);
+    console.log(this.dimensions);
     this.drawPoints();
     this.draw();
 };
@@ -123,7 +124,7 @@ RadvizInterface.prototype.draw = function () {
                                              "<div data-group-id='" + i + "' class='sidebar-groups-list-item-element sidebar-groups-list-item-remove'>x</div>" +
                                              "<div data-group-id='" + i + "' class='sidebar-groups-list-item-element sidebar-groups-list-item-element-group-" + i + " sidebar-groups-list-item-title'>" + d.name + "</div></div>");
             d.dimensions.forEach(function (e) {
-                $(".sidebar-groups-list-item-" + i).append("<div data-dimension-id='" + e + "' class='sidebar-groups-list-item-dimension-" + e + " sidebar-groups-list-item-element droppable-element'>" + _this.dimensions[e].attribute + "</div>");
+                $(".sidebar-groups-list-item-" + i).append("<div data-dimension-id='" + e + "' class='sidebar-groups-list-item-dimension-" + e + " sidebar-groups-list-item-element droppable-element'>" + _this.dimensions[e].name + " - " + _this.dimensions[e].attribute + "</div>");
             });
         }
     });
@@ -137,7 +138,7 @@ RadvizInterface.prototype.draw = function () {
     });
     this.dimensions.forEach(function (d,i) {
         if (d.available) {
-            $(".sidebar-dimensions-list").append("<div data-dimension-id='" + i + "' class='sidebar-dimensions-list-item droppable-element'>" + d.attribute + "</div>");
+            $(".sidebar-dimensions-list").append("<div data-dimension-id='" + i + "' class='sidebar-dimensions-list-item droppable-element'>" + d.name + " - " + d.attribute + "</div>");
         }
     });
 
@@ -242,7 +243,7 @@ RadvizInterface.prototype.activeGroupSlider = function (groupId) {
     var slider = $("#dimensionSliderController").data("ionRangeSlider");
     var _this = this;
     slider.update({from: parseFloat(1.0),onChange: function (data) {
-        var newWeight = parseFloat(data.from);
+        var newWeight = (isNaN(parseFloat(data.from))) ? 1.0 : parseFloat(data.from);
         _this.dimensionsGroups[groupId].dimensions.forEach(function (dim,idx) {
             _this.dimensions[dim].weight = newWeight;
         });
