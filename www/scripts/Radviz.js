@@ -11,6 +11,7 @@ Radviz.prototype.sigmoid = function(x){
     //sigmoid = 1/(1+exp(-x)) //image == [0,1]
     //sigmoid compressed [-1/2,1/2] = 1/(1+exp(-10x))
     //sigmoid compressed translated [0, 1] = 1/(1+exp(-10*x + 5))
+    //return 1;
     return (1/(1+Math.exp(-10*x+5))); //D = [0,1] Im = [0,1]
 };
 

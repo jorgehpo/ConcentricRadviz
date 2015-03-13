@@ -22,6 +22,13 @@ generateDataRecursive <- function(json.folder, genre = "genre_tzanetakis"){
   varNames = varNames[-ignoreIDs]
   varNames = gsub(".all","",varNames)
   mat = matrix(0, nrow = length(files), ncol = length(varNames))
+  
+  positions = regexpr("\\.",varNames)#remove first part of names (before .)
+  for (i in 1:length(varNames)){
+    varNames[i] = substr(varNames[i],start = positions[i]+1, stop = nchar(varNames[i]))
+  }
+  
+  
   colnames(mat) = varNames
   ret = list()
   ret$tags = list()

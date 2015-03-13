@@ -9,7 +9,6 @@ $.extend(networdOutputBindingRadviz, {
         if (!info){
             return;
         }
-        console.log(info);
         window.radviz = null;
         if (info.tooltip){
             window.radviz = new Radviz(info, info.tooltip);

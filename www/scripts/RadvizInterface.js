@@ -208,6 +208,7 @@ RadvizInterface.prototype.drawPoints = function () {
             .attr("cy", yMap)
             .on("mouseover", function (d) {
                 if (d.tip) {
+                    console.log(d);
                     _this.tooltip.show(d.tip);
                 }
             })
