@@ -47,7 +47,7 @@ shinyUI(
                 tags$button(id="btn-add-group",class="btn btn-block btn-primary","Add Group")
         ),
         tags$div(id="dimensionSlider",class="hidden",sliderInput("dimensionSliderController", label = "Slider",
-                                                min = 1, max = 10, step = 0.1, value = 1)),
+                                                min = 1, max = 100, step = 0.1, value = 1)),
       width=3),
       mainPanel(RadvizCanvas("myCanvas"),width=7)
     )#,

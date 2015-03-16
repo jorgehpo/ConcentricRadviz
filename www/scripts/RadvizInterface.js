@@ -207,13 +207,12 @@ RadvizInterface.prototype.drawPoints = function () {
             .attr("cx", xMap)
             .attr("cy", yMap)
             .on("mouseover", function (d) {
-                if (d.tip) {
-                    console.log(d);
+                if (d.tip !== null) {
                     _this.tooltip.show(d.tip);
                 }
             })
             .on("mouseout", function (d) {
-                if (d.tip) {
+                if (d.tip !== null) {
                     _this.tooltip.hide();
                 }
             });

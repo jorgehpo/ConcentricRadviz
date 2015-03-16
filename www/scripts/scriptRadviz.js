@@ -9,14 +9,14 @@ $.extend(networdOutputBindingRadviz, {
         if (!info){
             return;
         }
-        window.radviz = null;
+        var radviz = null;
         if (info.tooltip){
-            window.radviz = new Radviz(info, info.tooltip);
+            radviz = new Radviz(info, info.tooltip);
         }else{
-            window.radviz = new Radviz(info);
+            radviz = new Radviz(info);
         }
 
-        window.radInterface = new RadvizInterface(window.radviz,new RadvizViews(el, {diameter: 800, circleOffset: 20}));
+        window.radInterface = new RadvizInterface(radviz,new RadvizViews(el, {diameter: 800, circleOffset: 20}));
         window.radInterface.drawPoints();
     }//renderValue function
 })//extend networkOutputBindingRadviz

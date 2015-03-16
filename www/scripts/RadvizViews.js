@@ -74,7 +74,7 @@ RadvizViews.prototype.removeDimensionsGroup = function (idx) {
 
 RadvizViews.prototype.addDimensionToGroup = function (dimension,groupId) {
     this.groups[groupId].dimensions.push(dimension);
-    this.drawDimensions();
+    this.drawDimensions(groupId);
 };
 
 RadvizViews.prototype.getDimensionPosition = function (dimensionId,groupId) {
@@ -96,12 +96,13 @@ RadvizViews.prototype.removeDimensionFromGroup = function (dimensionId,groupId) 
     if (remove > -1) {
         this.groups[groupId].dimensions.splice(remove,1);
     }
-    this.drawDimensions();
+    this.drawDimensions(groupId);
 };
 
-RadvizViews.prototype.drawDimensions = function () {
+RadvizViews.prototype.drawDimensions = function (groupId) {
     var _this = this;
-    for (var i = 0; i < this.groups.length; ++i) {
+    var i = groupId; // porco pra tirar o for e desenhar só a dimensão groupId
+    //for (var i = 0; i < this.groups.length; ++i) {
         if (this.groups[i]) {
             var elements = this.groups[i].dimensions.length;
             var distance = 360;
@@ -144,7 +145,7 @@ RadvizViews.prototype.drawDimensions = function () {
                 _this.groups[i].dimensionsObjects[di] = dimG;
             });
         }
-    }
+    //}
 
     var _this = this;
     this.svg.on('mouseup', function () {
@@ -216,11 +217,10 @@ RadvizViews.prototype.drawDimensions = function () {
                     d3.select(this).attr("transform", "rotate(" + (pos / (Math.PI / 180)) + ")");
                     d3.select(this).select("text").attr("data-pos", (pos / (Math.PI / 180)));
                     d3.select(this).select("text").attr("transform", "translate(" + _this.groups[group].radius + ",0) rotate(" + (180 - (pos / (Math.PI / 180))) + ") scale(-1,1)");
-                    if (_this.updateDimensions) {
-                        _this.updateDimensions();
-                    }
                 });
-
+                if (_this.updateDimensions) {
+                    _this.updateDimensions();
+                }
             }
         }
     });

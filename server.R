@@ -21,7 +21,7 @@ shinyServer(function(input, output,session) {
   #output$myCanvas <- reactive(data)
   
   
-  output$myCanvas <- reactive(function(){
+  output$myCanvas <- reactive({
     if (is.null(input$file1))
       return(NULL)
     read.csv(input$file1$datapath)
