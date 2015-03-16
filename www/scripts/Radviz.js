@@ -162,8 +162,10 @@ Radviz.prototype.normalizeGroups = function(groupColumns){
                     }
                 }
                 for (var i = 0; i < this.matrix.length; i++) {
-                    for (var j = 0; j < group.length; j++) {
-                        this.matrix[i][group[j]] = this.matrix[i][group[j]] / maxRows[i];
+                    if (maxRows[i] > 0) {
+                        for (var j = 0; j < group.length; j++) {
+                            this.matrix[i][group[j]] = this.matrix[i][group[j]] / maxRows[i];
+                        }
                     }
                 }
             }
