@@ -26,3 +26,7 @@ Tooltip.prototype.updatePosition = function () {
     event = event || window.event;
     d3.select("#tooltip-global-" + this.randomId).style("top", (event.pageY - 37) + "px").style("left", (event.pageX - 100) + "px");
 };
+
+Tooltip.prototype.destroy = function () {
+    d3.select(".tooltip").remove();
+};

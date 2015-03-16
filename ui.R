@@ -41,6 +41,8 @@ shinyUI(
               tags$p("Available Dimensions:"),
               tags$div(class="sidebar-dimensions-list")
         ),
+        selectInput(inputId = "tooltipDimension", label = "Tooltip Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
+        selectInput(inputId = "colorDimension", label = "Color Dimension", choices = c(), selected = "Draw Selection", multiple = FALSE, selectize=FALSE),
         tags$div(class="sidebar-dimensions", checked=NA,
                 tags$p("Dimensions Groups:"),
                 tags$div(class="sidebar-groups-list"),

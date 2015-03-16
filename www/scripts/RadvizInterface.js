@@ -11,6 +11,12 @@ function RadvizInterface(radviz,radViews) {
     this.uniqueDimensionsCount = 0;
     this.uniqueGroupsCount = 0;
     this.uniqueRemovedGroupsCount = 0;
+    this.showTooltip = false;
+    this.dynamicColor = false;
+
+    $("#tooltipDimension").append("<option value='-1'>None</option>");
+    $("#colorDimension").append("<option value='-1'>None</option>");
+
     var _this = this;
     this.radviz.getDimensionNames().forEach(function (item,idx) {
         //addDimension( id : number, name_circle: small name, name_attribute: complete name)
@@ -21,7 +27,37 @@ function RadvizInterface(radviz,radViews) {
         _this.radviz.updateAnchors(_this.dimensions);
         _this.drawPoints();
     });
+
+    $("#tooltipDimension").val(-1);
+    $("#colorDimension").val(-1);
+
+    $("#tooltipDimension").on("change",function () {
+        var dimensionId = parseInt($(this).val());
+        if (dimensionId >= 0) {
+            _this.showTooltip = true;
+            _this.radviz.tooltip =_this.radviz.data[_this.dimensions[dimensionId].attribute];
+        } else {
+            _this.showTooltip = false;
+        }
+        _this.drawPoints();
+    });
+    $("#colorDimension").on("change",function () {
+        var dimensionId = parseInt($(this).val());
+        if (dimensionId >= 0) {
+            _this.dynamicColor = true;
+            _this.radviz.setColorsColumnId(dimensionId);
+        } else {
+            _this.dynamicColor = false;
+        }
+        _this.drawPoints();
+    });
 }
+
+RadvizInterface.prototype.destroy = function () {
+    $("#tooltipDimension").html("");
+    $("#colorDimension").html("");
+    this.tooltip.destroy();
+};
 
 RadvizInterface.prototype.getRadviz = function () {
     return this.radviz;
@@ -37,6 +73,8 @@ RadvizInterface.prototype.getSmallestCircleRadius = function () {
 
 RadvizInterface.prototype.addDimension = function (id,name,attribute) {
     var dim = {id: id,name: name,attribute: attribute,available: true,group: false,pos: 0,weight: 1};
+    $("#tooltipDimension").append("<option value='" + id + "'>" + id + " - " + attribute + "</option>");
+    $("#colorDimension").append("<option value='" + id + "'>" + id + " - " + attribute + "</option>");
     this.dimensions[id] = dim;
     this.uniqueDimensionsCount++;
     this.draw();
@@ -203,11 +241,20 @@ RadvizInterface.prototype.drawPoints = function () {
             .data(proj)
             .enter().append("circle")
             .attr("class", "dot")
+            .style("fill", function (d) {
+                if (_this.dynamicColor) {
+                    if (d.isContinuous) {
+
+                    }
+                } else {
+                    return "black";
+                }
+            })
             .attr("r", 3.5)
             .attr("cx", xMap)
             .attr("cy", yMap)
             .on("mouseover", function (d) {
-                if (d.tip !== null) {
+                if (d.tip !== null && _this.showTooltip) {
                     _this.tooltip.show(d.tip);
                 }
             })

@@ -16,6 +16,10 @@ $.extend(networdOutputBindingRadviz, {
             radviz = new Radviz(info);
         }
 
+        if (window.radInterface) {
+            window.radInterface.destroy();
+        }
+
         window.radInterface = new RadvizInterface(radviz,new RadvizViews(el, {diameter: 800, circleOffset: 20}));
         window.radInterface.drawPoints();
     }//renderValue function

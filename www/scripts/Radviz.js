@@ -8,6 +8,14 @@ function Radviz(data, tooltip){
     this.groupColumns = [];
 }
 
+Radviz.prototype.setColorsColumnId = function (columnId) {
+    if (isNaN(this.data[columnId])){ //VER ISSO
+        this.colors = numeric.rep([this.data[0].length],0)
+    }else{
+        //this.colors = this.mat_t[]
+    }
+};
+
 Radviz.prototype.setData = function(data){
     this.data = data;
     for (var c in this.data){
@@ -122,10 +130,11 @@ Radviz.prototype.computeProjection = function() {
         }
         _x = _x / this.yi[i];
         _y = _y / this.yi[i];
+        //var colorValue = FLOAT [0,1] SE ATTR COLOR NORMALIZADO / INT [0,N-1] SE NotNumber
         if (this.tooltip) {
-            proj.push({x: _x, y: _y, tip: this.tooltip[i]});
+            proj.push({x: _x, y: _y, tip: this.tooltip[i],isContinuous: false,color: this.colors[i]});
         } else {
-            proj.push({x: _x, y: _y, tip: null});
+            proj.push({x: _x, y: _y, tip: null,isContinuous: false,color: this.colors[i]});
         }
     }
     return (proj)
