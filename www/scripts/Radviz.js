@@ -4,6 +4,7 @@ function Radviz(data, tooltip){
     }
     this.setData(data);
     this.tooltip = tooltip;
+    this.isContinuous = false;
     this.matrix = [[]];
     this.groupColumns = [];
 }
@@ -132,7 +133,7 @@ Radviz.prototype.computeProjection = function() {
         _y = _y / this.yi[i];
         //var colorValue = FLOAT [0,1] SE ATTR COLOR NORMALIZADO / INT [0,N-1] SE NotNumber
         if (this.tooltip) {
-            proj.push({x: _x, y: _y, tip: this.tooltip[i],isContinuous: false,color: this.colors[i]});
+            proj.push({x: _x, y: _y, tip: this.tooltip[i],isContinuous: false,color: Math.random() * 20});
         } else {
             proj.push({x: _x, y: _y, tip: null,isContinuous: false,color: this.colors[i]});
         }

@@ -1,5 +1,11 @@
 var COLORSCALE = ["#1abc9c","#c0392b","#3498db","#9b59b6","#7f8c8d","#d35400","#2ecc71","#34495e","#f39c12","#bdc3c7","#f1c40f","#2c3e50","#e74c3c","#16a085","#95a5a6","#8e44ad","#27ae60","#e67e22","#2980b9"];
 
+var COLORSCALE2 = ["#1abc9c","#c0392b","#3498db","#9b59b6","#7f8c8d","#d35400","#2ecc71","#34495e","#f39c12","#bdc3c7","#f1c40f","#2c3e50","#e74c3c","#16a085","#95a5a6","#8e44ad","#27ae60","#e67e22","#2980b9"];
+
+var LINEARCOLORSCALE = d3.scale.linear()
+    .domain([0, 0.5, 1.0])
+    .range(["#e67e22", "#bdc3c7", "#2c3e50"]);
+
 function RadvizInterface(radviz,radViews) {
     this.radviz = radviz;
     this.radvizViews = radViews;
@@ -242,13 +248,15 @@ RadvizInterface.prototype.drawPoints = function () {
             .enter().append("circle")
             .attr("class", "dot")
             .style("fill", function (d) {
-                if (_this.dynamicColor) {
-                    if (d.isContinuous) {
-
+                //if (_this.dynamicColor) {
+                    if (_this.radviz.isContinuous) {
+                        return LINEARCOLORSCALE(d.color);
+                    } else {
+                        return COLORSCALE2[parseInt(d.color)];
                     }
-                } else {
-                    return "black";
-                }
+                //} else {
+                //    return "black";
+                //}
             })
             .attr("r", 3.5)
             .attr("cx", xMap)
