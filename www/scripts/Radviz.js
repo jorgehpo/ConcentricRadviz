@@ -4,25 +4,25 @@ function Radviz(data, tooltip){
     }
     this.setData(data);
     this.tooltip = tooltip;
-    this.isContinuous = false;
+    this.isContinuous = true;
     this.matrix = [[]];
     this.colors = numeric.rep([this.data[Object.keys(this.data)[0]].length], 0);
 }
 
 
-Radviz.prototype.asFactor = function()
+Radviz.prototype.asFactor = function(data)
 {
     var map = {},unique=[], factor = [], contUnique = 1;
-    for(var i = 0; i < this.length; i++)
+    for(var i = 0; i < data.length; i++)
     {
-        if (!map[this[i]])
+        if (!map[data[i]])
         {
-            map[this[i]] = contUnique;
+            map[data[i]] = contUnique;
             factor.push(contUnique);
-            unique.push(this[i]);
+            unique.push(data[i]);
             contUnique++;
         }else{
-            factor.push(map[this[i]]);
+            factor.push(map[data[i]]);
         }
     }
     return {mapElements: map, factor: factor};
@@ -31,8 +31,8 @@ Radviz.prototype.asFactor = function()
 Radviz.prototype.setColorsColumnId = function (columnId) {
     if (isNaN(this.data[this.dimNames[columnId]][0])){
         this.isContinuous = false;
-        var factor = this.asFactor(this.data[this.dimNames[columnId]]).factor;
-        this.colors = factor;
+        var factor = this.asFactor(this.data[this.dimNames[columnId]]);
+        this.colors = factor.factor;
     }else{
         this.isContinuous = true;
         this.colors = this.data[this.dimNames[columnId]];
