@@ -8,10 +8,12 @@ shinyUI(
   fluidPage(
     tags$head(
       tags$script(type = "text/javascript", src = "d3.v3/d3.v3.js"),
+      tags$script(type = "text/javascript", src = "d3.v3/polybrush.js"),
       tags$link(rel="stylesheet", type="text/css", href="css/radviz.css"),
       tags$script(type="text/javascript", src="numericJS/numeric-1.2.6.min.js"),
       tags$script(type="text/javascript", src="jquery.ui/jquery-ui.min.js"),
       tags$script(type="text/javascript", src= "scripts/Tooltip.js"),
+      tags$script(type="text/javascript", src= "scripts/Selector.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizInterface.js"),
       tags$script(type="text/javascript", src= "scripts/Radviz.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizViews.js"),
@@ -44,6 +46,7 @@ shinyUI(
         tags$div(id="dimensionSlider",class="hidden",sliderInput("dimensionSliderController", label = "Slider",min = 1, max = 20, step = 0.1, value = 1)),
         selectInput(inputId = "tooltipDimension", label = "Tooltip Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
         selectInput(inputId = "colorDimension", label = "Color Dimension", choices = c(), selected = "Draw Selection", multiple = FALSE, selectize=FALSE),
+        tags$button(id="btn-reset-selection",class="btn btn-block btn-danger","Reset Selection"),
       width=3),
       mainPanel(RadvizCanvas("myCanvas"),width=7)
     )#,

@@ -28,6 +28,10 @@ Radviz.prototype.asFactor = function(data)
     return {mapElements: map, factor: factor};
 };
 
+Radviz.prototype.setSelected = function (selection) {
+
+};
+
 Radviz.prototype.setColorsColumnId = function (columnId) {
     if (isNaN(this.data[this.dimNames[columnId]][0])){
         this.isContinuous = false;
@@ -156,9 +160,9 @@ Radviz.prototype.computeProjection = function() {
         _y = _y / this.yi[i];
         //var colorValue = FLOAT [0,1] SE ATTR COLOR NORMALIZADO / INT [0,N-1] SE NotNumber
         if (this.tooltip) {
-            proj.push({x: _x, y: _y, tip: this.tooltip[i],color: this.colors[i]});
+            proj.push({x: _x, y: _y, tip: this.tooltip[i],color: this.colors[i],selected: true});
         } else {
-            proj.push({x: _x, y: _y, tip: null, color: this.colors[i]});
+            proj.push({x: _x, y: _y, tip: null, color: this.colors[i],selected: true});
         }
     }
     return (proj)

@@ -9,6 +9,7 @@ var LINEARCOLORSCALE = d3.scale.linear()
 function RadvizInterface(radviz,radViews) {
     this.radviz = radviz;
     this.radvizViews = radViews;
+    this.selector = new Selector(this);
     this.tooltip = new Tooltip();
     this.dimensionsElement = $(".sidebar-dimensions-list");
     this.dimensions = [];
@@ -63,6 +64,7 @@ RadvizInterface.prototype.destroy = function () {
     $("#tooltipDimension").html("");
     $("#colorDimension").html("");
     this.tooltip.destroy();
+    this.selector.destroyPolybrush();
 };
 
 RadvizInterface.prototype.getRadviz = function () {
@@ -246,7 +248,9 @@ RadvizInterface.prototype.drawPoints = function () {
         radInterface.getSvg().selectAll(".dot")
             .data(proj)
             .enter().append("circle")
-            .attr("class", "dot")
+            .attr("class", function (d,idx) {
+                return "dot dot-id-" + idx;
+            })
             .style("fill", function (d) {
                 //if (_this.dynamicColor) {
                     if (_this.radviz.isContinuous) {
@@ -258,9 +262,20 @@ RadvizInterface.prototype.drawPoints = function () {
                 //    return "black";
                 //}
             })
+            .attr("id", function (d,idx) {
+                return idx;
+            })
             .attr("r", 3.5)
             .attr("cx", xMap)
             .attr("cy", yMap)
+            .style("stroke","black")
+            .style("stroke-width", function (d) {
+                if (d.selected) {
+                    return 1.5;
+                } else {
+                    return 0;
+                }
+            })
             .on("mouseover", function (d) {
                 if (d.tip !== null && _this.showTooltip) {
                     _this.tooltip.show(d.tip);
@@ -307,4 +322,14 @@ RadvizInterface.prototype.activeGroupSlider = function (groupId) {
 
 RadvizInterface.prototype.hideDimensionSlider = function () {
     $("#dimensionSlider").addClass("hidden");
+};
+
+RadvizInterface.prototype.resetSelection = function () {
+    this.selectMultipleItems([]);
+};
+
+RadvizInterface.prototype.selectMultipleItems = function (selection) {
+    console.log(selection);
+    this.radviz.setSelected(selection);
+    this.drawPoints();
 };
