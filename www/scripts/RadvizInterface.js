@@ -241,8 +241,8 @@ RadvizInterface.prototype.drawPoints = function () {
 
     var _this = this;
     var proj = this.radviz.computeProjection();
+    radInterface.getSvg().selectAll(".dot").remove();
     if (proj.length > 0){
-        radInterface.getSvg().selectAll(".dot").remove();
         radInterface.getSvg().selectAll(".dot")
             .data(proj)
             .enter().append("circle")

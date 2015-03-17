@@ -10,7 +10,7 @@ function Radviz(data, tooltip){
 }
 
 
-Array.prototype.asFactor = function()
+Radviz.prototype.asFactor = function()
 {
     var map = {},unique=[], factor = [], contUnique = 1;
     for(var i = 0; i < this.length; i++)
@@ -29,22 +29,19 @@ Array.prototype.asFactor = function()
 };
 
 Radviz.prototype.setColorsColumnId = function (columnId) {
-    var dimNames = Object.keys(this.data);
-    if (isNaN(this.data[dimNames[columnId]][0])){
+    if (isNaN(this.data[this.dimNames[columnId]][0])){
         this.isContinuous = false;
-        var factor = this.data[dimNames[columnId]].asFactor().factor;
+        var factor = this.asFactor(this.data[this.dimNames[columnId]]).factor;
         this.colors = factor;
     }else{
         this.isContinuous = true;
-        this.colors = this.data[dimNames[columnId]];
+        this.colors = this.data[this.dimNames[columnId]];
     }
 };
 
 Radviz.prototype.setData = function(data){
     this.data = data;
-
-
-
+    this.dimNames = Object.keys(this.data);
     for (var c in this.data){
         var i;
         if (!isNaN(this.data[c][0])) {
@@ -170,7 +167,9 @@ Radviz.prototype.computeProjection = function() {
 Radviz.prototype.selectColumns = function(columns, groupColumns) {
     this.mat_t = [];
     if (columns.length == 0){
-        return [[]];
+        this.mat_t = [[]];
+        this.matrix = [[]];
+        return;
     }
 
     var _this = this;
