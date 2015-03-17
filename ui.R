@@ -32,24 +32,18 @@ shinyUI(
                   )
         ),
         tags$hr(),
-        #selectInput(inputId = "n_breaks",
-        #      label = "Dataset:",
-        #      choices = c("Dataset 1", "Dataset 2", "Dataset 3", "Dataset 4"),
-        #      selected = "Dataset 1"
-        #),
         tags$div(class="sidebar-dimensions", checked=NA,
               tags$p("Available Dimensions:"),
               tags$div(class="sidebar-dimensions-list")
         ),
-        selectInput(inputId = "tooltipDimension", label = "Tooltip Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
-        selectInput(inputId = "colorDimension", label = "Color Dimension", choices = c(), selected = "Draw Selection", multiple = FALSE, selectize=FALSE),
         tags$div(class="sidebar-dimensions", checked=NA,
                 tags$p("Dimensions Groups:"),
                 tags$div(class="sidebar-groups-list"),
                 tags$button(id="btn-add-group",class="btn btn-block btn-primary","Add Group")
         ),
-        tags$div(id="dimensionSlider",class="hidden",sliderInput("dimensionSliderController", label = "Slider",
-                                                min = 1, max = 20, step = 0.1, value = 1)),
+        tags$div(id="dimensionSlider",class="hidden",sliderInput("dimensionSliderController", label = "Slider",min = 1, max = 20, step = 0.1, value = 1)),
+        selectInput(inputId = "tooltipDimension", label = "Tooltip Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
+        selectInput(inputId = "colorDimension", label = "Color Dimension", choices = c(), selected = "Draw Selection", multiple = FALSE, selectize=FALSE),
       width=3),
       mainPanel(RadvizCanvas("myCanvas"),width=7)
     )#,

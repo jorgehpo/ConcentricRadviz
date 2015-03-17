@@ -6,19 +6,45 @@ function Radviz(data, tooltip){
     this.tooltip = tooltip;
     this.isContinuous = false;
     this.matrix = [[]];
-    this.groupColumns = [];
+    this.colors = numeric.rep([this.data[Object.keys(this.data)[0]].length], 0);
 }
 
+
+Array.prototype.asFactor = function()
+{
+    var map = {},unique=[], factor = [], contUnique = 1;
+    for(var i = 0; i < this.length; i++)
+    {
+        if (!map[this[i]])
+        {
+            map[this[i]] = contUnique;
+            factor.push(contUnique);
+            unique.push(this[i]);
+            contUnique++;
+        }else{
+            factor.push(map[this[i]]);
+        }
+    }
+    return {mapElements: map, factor: factor};
+};
+
 Radviz.prototype.setColorsColumnId = function (columnId) {
-    if (isNaN(this.data[columnId])){ //VER ISSO
-        this.colors = numeric.rep([this.data[0].length],0)
+    var dimNames = Object.keys(this.data);
+    if (isNaN(this.data[dimNames[columnId]][0])){
+        this.isContinuous = false;
+        var factor = this.data[dimNames[columnId]].asFactor().factor;
+        this.colors = factor;
     }else{
-        //this.colors = this.mat_t[]
+        this.isContinuous = true;
+        this.colors = this.data[dimNames[columnId]];
     }
 };
 
 Radviz.prototype.setData = function(data){
     this.data = data;
+
+
+
     for (var c in this.data){
         var i;
         if (!isNaN(this.data[c][0])) {
@@ -133,9 +159,9 @@ Radviz.prototype.computeProjection = function() {
         _y = _y / this.yi[i];
         //var colorValue = FLOAT [0,1] SE ATTR COLOR NORMALIZADO / INT [0,N-1] SE NotNumber
         if (this.tooltip) {
-            proj.push({x: _x, y: _y, tip: this.tooltip[i],isContinuous: false,color: Math.random() * 20});
+            proj.push({x: _x, y: _y, tip: this.tooltip[i],color: this.colors[i]});
         } else {
-            proj.push({x: _x, y: _y, tip: null,isContinuous: false,color: this.colors[i]});
+            proj.push({x: _x, y: _y, tip: null, color: this.colors[i]});
         }
     }
     return (proj)
