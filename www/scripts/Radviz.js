@@ -1,12 +1,13 @@
-function Radviz(data, tooltip){
+function Radviz(data){
     if (!data){
         throw "Error. Radviz requires a dataset to work with."
     }
     this.setData(data);
-    this.tooltip = tooltip;
     this.isContinuous = true;
     this.matrix = [[]];
-    this.colors = numeric.rep([this.data[Object.keys(this.data)[0]].length], 0);
+    this.dimNames = Object.keys(data);
+    this.colors = numeric.rep([this.data[this.dimNames[0]].length], 0);
+    this.selected = {};
 }
 
 
@@ -29,10 +30,14 @@ Radviz.prototype.asFactor = function(data)
 };
 
 Radviz.prototype.setSelected = function (selection) {
-
+    this.selected = {};
+    for (var id in selection){
+        this.selected[selection[id]] = true;
+    }
 };
 
 Radviz.prototype.setColorsColumnId = function (columnId) {
+    console.log(this.data[this.dimNames[columnId]]);
     if (isNaN(this.data[this.dimNames[columnId]][0])){
         this.isContinuous = false;
         var factor = this.asFactor(this.data[this.dimNames[columnId]]);
@@ -45,7 +50,6 @@ Radviz.prototype.setColorsColumnId = function (columnId) {
 
 Radviz.prototype.setData = function(data){
     this.data = data;
-    this.dimNames = Object.keys(this.data);
     for (var c in this.data){
         var i;
         if (!isNaN(this.data[c][0])) {
@@ -152,17 +156,18 @@ Radviz.prototype.computeProjection = function() {
     var proj = [];
     for (var i = 0; i < nrow; i++) {
         var _x = 0, _y = 0;
+        var matrix_i = this.matrix[i];
         for (var j = 0; j < ncol; j++) {
-            _x += anchors[j][0] * this.matrix[i][j] * (1 + this.weights[j] * this.sigmoid(this.matrix[i][j]));
-            _y += anchors[j][1] * this.matrix[i][j] * (1 + this.weights[j] * this.sigmoid(this.matrix[i][j]));
+            _x += anchors[j][0] * matrix_i[j] * (1 + this.weights[j] * this.sigmoid(matrix_i[j]));
+            _y += anchors[j][1] * matrix_i[j] * (1 + this.weights[j] * this.sigmoid(matrix_i[j]));
         }
         _x = _x / this.yi[i];
         _y = _y / this.yi[i];
         //var colorValue = FLOAT [0,1] SE ATTR COLOR NORMALIZADO / INT [0,N-1] SE NotNumber
         if (this.tooltip) {
-            proj.push({x: _x, y: _y, tip: this.tooltip[i],color: this.colors[i],selected: true});
+            proj.push({x: _x, y: _y, tip: this.tooltip[i],color: this.colors[i],selected: (this.selected[i]?true:false)});
         } else {
-            proj.push({x: _x, y: _y, tip: null, color: this.colors[i],selected: true});
+            proj.push({x: _x, y: _y, tip: null, color: this.colors[i],selected: (this.selected[i]?true:false)});
         }
     }
     return (proj)
@@ -189,26 +194,26 @@ Radviz.prototype.selectColumns = function(columns, groupColumns) {
 Radviz.prototype.normalizeGroups = function(groupColumns){
     for (var gId in groupColumns){
         var group = groupColumns[gId];
-        if (group){
-			if (group.length > 0) {
-                var maxRows = this.mat_t[group[0]].slice(0);
-                for (var dId in group) { //dimension ID
-                    var column = group[dId];
-                    for (var rId in this.mat_t[dId]) { //row id
-                        if (this.mat_t[column][rId] > maxRows[rId]) {
-                            maxRows[rId] = this.mat_t[column][rId];
-                        }
+
+        if (group && group.length > 0) {
+            var maxRows = this.mat_t[group[0]].slice(0);
+            for (var dId in group) { //dimension ID
+                var column = group[dId];
+                for (var rId in this.mat_t[dId]) { //row id
+                    if (this.mat_t[column][rId] > maxRows[rId]) {
+                        maxRows[rId] = this.mat_t[column][rId];
                     }
                 }
-                for (var i = 0; i < this.matrix.length; i++) {
-                    if (maxRows[i] > 0) {
-                        for (var j = 0; j < group.length; j++) {
-                            this.matrix[i][group[j]] = this.matrix[i][group[j]] / maxRows[i];
-                        }
+            }
+            for (var i = 0; i < this.matrix.length; i++) {
+                if (maxRows[i] > 0) {
+                    for (var j = 0; j < group.length; j++) {
+                        this.matrix[i][group[j]] = this.matrix[i][group[j]] / maxRows[i];
                     }
                 }
             }
         }
+
     }
 };
 

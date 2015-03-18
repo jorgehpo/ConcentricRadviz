@@ -1,23 +1,10 @@
 function Selector(interface) {
 	this.interface = interface;
-	this.colorMode = "solid";
 	this.brush = null;
 	this.selectedElements = [];
 	this.initEvents();
 	this.initPolybrush(this.interface.getSvg());
 }
-
-//Selector.prototype.initVertexSelector = function () {
-//	//Creating selector
-//	var _this = this;
-//	$(".nj-node").on("click", function () {
-//		_this.controls.bundling.selectItem($(this).attr("data-item"));
-//	});
-//};
-//
-//Selector.prototype.destroyVertexSelector = function (bundling) {
-//	$(".nj-node").off("click");
-//};
 
 Selector.prototype.initEvents = function () {
 	var _this = this;
