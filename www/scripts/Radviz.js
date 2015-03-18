@@ -30,14 +30,15 @@ Radviz.prototype.asFactor = function(data)
 };
 
 Radviz.prototype.setSelected = function (selection) {
-    this.selected = {};
+    this.selected = [];
+    $("#selectionList").html('');
     for (var id in selection){
         this.selected[selection[id]] = true;
+        $("#selectionList").append("<option value='" + selection[id] + "'>" + selection[id] + ": " + this.data[this.dimNames[parseInt($("#listDimension").val())]][selection[id]] + "</option>");
     }
 };
 
 Radviz.prototype.setColorsColumnId = function (columnId) {
-    console.log(this.data[this.dimNames[columnId]]);
     if (isNaN(this.data[this.dimNames[columnId]][0])){
         this.isContinuous = false;
         var factor = this.asFactor(this.data[this.dimNames[columnId]]);

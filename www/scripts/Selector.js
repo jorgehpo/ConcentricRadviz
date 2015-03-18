@@ -10,6 +10,13 @@ Selector.prototype.initEvents = function () {
 	var _this = this;
 	$("#btn-reset-selection").on("click", function () {
 		_this.interface.resetSelection();
+		_this.interface.currentSelectionMode = "reset";
+	});
+	$("#btn-add-selection").on("click", function () {
+		_this.interface.currentSelectionMode = "add";
+	});
+	$("#btn-sub-selection").on("click", function () {
+		_this.interface.currentSelectionMode = "sub";
 	});
 };
 

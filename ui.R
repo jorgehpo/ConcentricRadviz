@@ -21,34 +21,42 @@ shinyUI(
       tags$script(type="text/javascript", src= "scripts/scriptRadviz.js")
     ),
     titlePanel("Concentric Radviz"),
-    sidebarLayout(
-      sidebarPanel(
-        fileInput('file1', 'Choose file to upload',
-                  accept = c(
-                    'text/csv',
-                    'text/comma-separated-values',
-                    'text/tab-separated-values',
-                    'text/plain',
-                    '.csv',
-                    '.tsv'
-                  )
+    fluidPage(
+      fluidRow(
+        column(3,class="well",
+          fileInput('file1', 'Choose file to upload',
+                    accept = c(
+                      'text/csv',
+                      'text/comma-separated-values',
+                      'text/tab-separated-values',
+                      'text/plain',
+                      '.csv',
+                      '.tsv'
+                    )
+          ),
+          tags$hr(),
+          tags$div(class="sidebar-dimensions", checked=NA,
+                tags$p("Available Dimensions:"),
+                tags$div(class="sidebar-dimensions-list")
+          ),
+          tags$div(class="sidebar-dimensions", checked=NA,
+                  tags$p("Dimensions Groups:"),
+                  tags$div(class="sidebar-groups-list"),
+                  tags$button(id="btn-add-group",class="btn btn-block btn-primary","Add Group")
+          ),
+          tags$div(id="dimensionSlider",class="hidden",sliderInput("dimensionSliderController", label = "Slider",min = 1, max = 20, step = 0.1, value = 1)),
+          selectInput(inputId = "tooltipDimension", label = "Tooltip Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
+          selectInput(inputId = "colorDimension", label = "Color Dimension", choices = c(), selected = "Draw Selection", multiple = FALSE, selectize=FALSE)
         ),
-        tags$hr(),
-        tags$div(class="sidebar-dimensions", checked=NA,
-              tags$p("Available Dimensions:"),
-              tags$div(class="sidebar-dimensions-list")
-        ),
-        tags$div(class="sidebar-dimensions", checked=NA,
-                tags$p("Dimensions Groups:"),
-                tags$div(class="sidebar-groups-list"),
-                tags$button(id="btn-add-group",class="btn btn-block btn-primary","Add Group")
-        ),
-        tags$div(id="dimensionSlider",class="hidden",sliderInput("dimensionSliderController", label = "Slider",min = 1, max = 20, step = 0.1, value = 1)),
-        selectInput(inputId = "tooltipDimension", label = "Tooltip Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
-        selectInput(inputId = "colorDimension", label = "Color Dimension", choices = c(), selected = "Draw Selection", multiple = FALSE, selectize=FALSE),
-        tags$button(id="btn-reset-selection",class="btn btn-block btn-danger","Reset Selection"),
-      width=3),
-      mainPanel(RadvizCanvas("myCanvas"),width=7)
+        column(6,RadvizCanvas("myCanvas")),
+        column(3,class="well",strong('Selector'),
+          includeHTML("selectorButtons.html"),
+          tags$hr(),
+          selectInput(inputId = "listDimension", label = "Label Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
+          selectInput(inputId = "selectionList", label = "Selected Elements", choices = c(), selected = NULL, multiple = TRUE, selectize=FALSE)
+
+        )
+      )
     )#,
     #includeHTML("modal.html")
   )

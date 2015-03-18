@@ -20,6 +20,8 @@ function RadvizInterface(radviz,radViews) {
     this.uniqueRemovedGroupsCount = 0;
     this.showTooltip = false;
     this.dynamicColor = false;
+    this.currentSelection = [];
+    this.currentSelectionMode = "reset";
 
     $("#tooltipDimension").append("<option value='-1'>None</option>");
     $("#colorDimension").append("<option value='-1'>None</option>");
@@ -83,6 +85,7 @@ RadvizInterface.prototype.addDimension = function (id,name,attribute) {
     var dim = {id: id,name: name,attribute: attribute,available: true,group: false,pos: 0,weight: 1};
     $("#tooltipDimension").append("<option value='" + id + "'>" + id + " - " + attribute + "</option>");
     $("#colorDimension").append("<option value='" + id + "'>" + id + " - " + attribute + "</option>");
+    $("#listDimension").append("<option value='" + id + "'>" + id + " - " + attribute + "</option>");
     this.dimensions[id] = dim;
     this.uniqueDimensionsCount++;
     this.draw();
@@ -252,15 +255,15 @@ RadvizInterface.prototype.drawPoints = function () {
                 return "dot dot-id-" + idx;
             })
             .style("fill", function (d) {
-                //if (_this.dynamicColor) {
+                if (_this.dynamicColor) {
                     if (_this.radviz.isContinuous) {
                         return LINEARCOLORSCALE(d.color);
                     } else {
                         return COLORSCALE2[parseInt(d.color)];
                     }
-                //} else {
-                //    return "black";
-                //}
+                } else {
+                    return LINEARCOLORSCALE(0.0);
+                }
             })
             .attr("id", function (d,idx) {
                 return idx;
@@ -325,11 +328,26 @@ RadvizInterface.prototype.hideDimensionSlider = function () {
 };
 
 RadvizInterface.prototype.resetSelection = function () {
+    this.currentSelection = [];
     this.selectMultipleItems([]);
 };
 
 RadvizInterface.prototype.selectMultipleItems = function (selection) {
-    console.log(selection);
-    this.radviz.setSelected(selection);
+    var _this = this;
+    if (this.currentSelectionMode === "add") {
+        this.currentSelection = this.currentSelection.concat(selection);
+    }
+    if (this.currentSelectionMode === "reset") {
+        this.currentSelection = selection;
+    }
+    if (this.currentSelectionMode === "sub") {
+        selection.forEach(function (id) {
+            var idxCurr = _this.currentSelection.indexOf(id);
+            if (idxCurr != -1) {
+                _this.currentSelection.splice(idxCurr,1);
+            }
+        });
+    }
+    this.radviz.setSelected(this.currentSelection);
     this.drawPoints();
 };
