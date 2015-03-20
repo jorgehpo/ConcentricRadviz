@@ -31,6 +31,7 @@ Radviz.prototype.asFactor = function(data)
 
 Radviz.prototype.setSelected = function (selection) {
     this.selected = [];
+    var _this = this;
     $("#selectionList").html('');
     for (var id in selection){
         this.selected[selection[id]] = true;

@@ -20,7 +20,7 @@ $.extend(networdOutputBindingRadviz, {
             window.radInterface.destroy();
         }
 
-        window.radInterface = new RadvizInterface(radviz,new RadvizViews(el, {diameter: 800, circleOffset: 20}));
+        window.radInterface = new RadvizInterface(radviz,new RadvizViews(el, {diameter: 900, circleOffset: 40}));
         window.radInterface.drawPoints();
     }//renderValue function
 })//extend networkOutputBindingRadviz

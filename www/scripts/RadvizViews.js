@@ -132,14 +132,16 @@ RadvizViews.prototype.drawDimensions = function (groupId) {
                     .attr("cx", _this.groups[i].radius)
                     .attr("cy", 0)
                     .attr("r", 9)
-                    .style("fill", "#2c3e50")
+                    .style("fill", "lightGray")
                     .style("stroke", "none");
                 dimG.append("text")
                     .attr("data-pos", d.pos)
-                    .attr("dx", -5)
+                    .attr("dx", 0)
                     .attr("dy", 4.5)
-                    .text(d.name)
-                    .style("fill", "lightGray")
+                    .attr("text-anchor", "middle")
+                    .attr("font-weight", "bold")
+                    .text(d.attribute)
+                    .style("fill", "#2c3e50")
                     .attr("transform", "translate(" + _this.groups[i].radius + ",0) rotate(" + (180 - _this.groups[i].dimensions[di].pos) + ") scale(-1,1)");
 
                 _this.groups[i].dimensionsObjects[di] = dimG;

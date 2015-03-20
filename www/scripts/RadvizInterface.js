@@ -60,11 +60,16 @@ function RadvizInterface(radviz,radViews) {
         }
         _this.drawPoints();
     });
+    $("#listDimension").on("change",function () {
+        _this.radviz.setSelected(_this.currentSelection);
+    });
 }
 
 RadvizInterface.prototype.destroy = function () {
     $("#tooltipDimension").html("");
     $("#colorDimension").html("");
+    $("#listDimension").html("");
+    $("#selectionList").html("");
     this.tooltip.destroy();
     this.selector.destroyPolybrush();
 };
@@ -272,6 +277,7 @@ RadvizInterface.prototype.drawPoints = function () {
             .attr("cx", xMap)
             .attr("cy", yMap)
             .style("stroke","black")
+            .style("opacity","0.65")
             .style("stroke-width", function (d) {
                 if (d.selected) {
                     return 1.5;
