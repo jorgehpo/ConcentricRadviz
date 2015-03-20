@@ -2,7 +2,7 @@
 
 require(shiny)
 source("ReadMusicData.R")
-
+options(shiny.maxRequestSize=50*1024^2) 
 
 inputSongs <- function(text){
   array = eval(parse(text=text))
@@ -10,6 +10,11 @@ inputSongs <- function(text){
     array = c(array,array)
   }
   return (array)
+}
+
+fast_normalize01 <- function(x) { 
+  x <- sweep(x, 2, function(x){ifelse(class(x)=='numeric', apply(x, 2, min), x)}) 
+  sweep(x, 2, apply(x, 2, max), "/") 
 }
 
 shinyServer(function(input, output,session) {

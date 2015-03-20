@@ -44,7 +44,7 @@ function RadvizInterface(radviz,radViews) {
         var dimensionId = parseInt($(this).val());
         if (dimensionId >= 0) {
             _this.showTooltip = true;
-            _this.radviz.tooltip =_this.radviz.data[_this.dimensions[dimensionId].attribute];
+            _this.radviz.tooltip =_this.radviz.myData[_this.dimensions[dimensionId].attribute];
         } else {
             _this.showTooltip = false;
         }
@@ -121,6 +121,23 @@ RadvizInterface.prototype.removeGroup = function (groupId) {
         this.uniqueGroupsCount = 0;
         this.uniqueRemovedGroupsCount = 0;
         this.dimensionsGroups = [];
+    }
+    this.radviz.setAnchors(this.dimensions);
+    this.drawPoints();
+    this.draw();
+};
+
+//Fabio nao fique bravo...
+RadvizInterface.prototype.addDimensionsToGroup = function(dimensionsId, groupId){
+    if (dimensionsId.constructor !== Array) return;
+    for (var dimensionId in dimensionsId){
+        console.log(dimensionId);
+        dimensionId = parseInt(dimensionId);
+        groupId = parseInt(groupId);
+        this.dimensions[dimensionId].available = false;
+        this.dimensions[dimensionId].group = groupId;
+        this.dimensionsGroups[groupId].dimensions.push(dimensionId);
+        this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
     }
     this.radviz.setAnchors(this.dimensions);
     this.drawPoints();

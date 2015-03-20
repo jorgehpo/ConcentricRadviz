@@ -9,12 +9,8 @@ $.extend(networdOutputBindingRadviz, {
         if (!info){
             return;
         }
-        var radviz = null;
-        if (info.tooltip){
-            radviz = new Radviz(info, info.tooltip);
-        }else{
-            radviz = new Radviz(info);
-        }
+        var radviz = new Radviz(info);
+
 
         if (window.radInterface) {
             window.radInterface.destroy();
@@ -22,6 +18,13 @@ $.extend(networdOutputBindingRadviz, {
 
         window.radInterface = new RadvizInterface(radviz,new RadvizViews(el, {diameter: 900, circleOffset: 40}));
         window.radInterface.drawPoints();
+
+        window.radInterface.addGroup("Grupo Automatico","green");
+        var cols = []; for (var i = 0; i < Math.min(400,Object.keys(info).length); i++){
+            cols.push(i);
+        }
+        window.radInterface.addDimensionsToGroup(cols,0);
+        //for (var i = 0; i < Math.min(10,Object.keys(info).length); i++) window.radInterface.addDimensionToGroup(i,0)
     }//renderValue function
 })//extend networkOutputBindingRadviz
 

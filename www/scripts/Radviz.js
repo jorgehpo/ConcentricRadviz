@@ -2,11 +2,12 @@ function Radviz(data){
     if (!data){
         throw "Error. Radviz requires a dataset to work with."
     }
-    this.setData(data);
+    this.myData = data;
+    //this.normalizeData();
     this.isContinuous = true;
     this.matrix = [[]];
     this.dimNames = Object.keys(data);
-    this.colors = numeric.rep([this.data[this.dimNames[0]].length], 0);
+    this.colors = numeric.rep([this.myData[this.dimNames[0]].length], 0);
     this.selected = {};
 }
 
@@ -35,37 +36,39 @@ Radviz.prototype.setSelected = function (selection) {
     $("#selectionList").html('');
     for (var id in selection){
         this.selected[selection[id]] = true;
-        $("#selectionList").append("<option value='" + selection[id] + "'>" + selection[id] + ": " + this.data[this.dimNames[parseInt($("#listDimension").val())]][selection[id]] + "</option>");
+        $("#selectionList").append("<option value='" + selection[id] + "'>" + selection[id] + ": " + this.myData[this.dimNames[parseInt($("#listDimension").val())]][selection[id]] + "</option>");
     }
 };
 
 Radviz.prototype.setColorsColumnId = function (columnId) {
-    if (isNaN(this.data[this.dimNames[columnId]][0])){
+    if (isNaN(this.myData[this.dimNames[columnId]][0])){
         this.isContinuous = false;
-        var factor = this.asFactor(this.data[this.dimNames[columnId]]);
+        var factor = this.asFactor(this.myData[this.dimNames[columnId]]);
         this.colors = factor.factor;
     }else{
         this.isContinuous = true;
-        this.colors = this.data[this.dimNames[columnId]];
+        this.colors = this.myData[this.dimNames[columnId]];
     }
 };
 
-Radviz.prototype.setData = function(data){
-    this.data = data;
-    for (var c in this.data){
+Radviz.prototype.normalizeData = function(){
+    for (var c in this.myData){
         var i;
-        if (!isNaN(this.data[c][0])) {
-            var min = this.data[c][0];
-            var max = this.data[c][0];
-            for (i = 0; i < this.data[c].length; i++) {
-                if (this.data[c][i] < min) {
-                    min = this.data[c][i];
-                } else if (this.data[c][i] > max) {
-                    max = this.data[c][i];
+        if (!isNaN(this.myData[c][0])) {
+            var min = this.myData[c][0];
+            var max = this.myData[c][0];
+            for (i = 0; i < this.myData[c].length; i++) {
+                if (this.myData[c][i] < min) {
+                    min = this.myData[c][i];
+                } else if (this.myData[c][i] > max) {
+                    max = this.myData[c][i];
                 }
             }
-            for (i = 0; i < this.data[c].length; i++) {
-                this.data[c][i] = (this.data[c][i] - min) / (max - min);
+            if (max == 0){
+                max = 1;
+            }
+            for (i = 0; i < this.myData[c].length; i++) {
+                this.myData[c][i] = (this.myData[c][i] - min) / (max - min);
             }
         }
     }
@@ -84,16 +87,16 @@ Radviz.prototype.sigmoid = function(x){
 Radviz.prototype.compute_yi = function(){
     this.yi = []; //used in computeProjection method. Only needs to be updated when data changes
     var _this = this;
-    this.matrix.forEach(function (x){
 
-        //_this.yi.push(aux_yi);
+    for (var i = 0; i < this.matrix.length; i++){
         var aux_yi = 0;
+        var x = this.matrix[i];
         for (var j = 0; j < x.length; j++){
-            aux_yi += x[j] * (1 + _this.weights[j]* _this.sigmoid(x[j]));
+            aux_yi += x[j] * (1+ _this.weights[j] * _this.sigmoid(x[j]));
         }
         if (aux_yi == 0) aux_yi = 1;
-        _this.yi.push(aux_yi);
-    });
+        this.yi.push(aux_yi)
+    }
 };
 
 Radviz.prototype.setAnchors = function(anchors) {
@@ -186,7 +189,7 @@ Radviz.prototype.selectColumns = function(columns, groupColumns) {
     var _this = this;
     columns.forEach(function (c) {
         //add data to matrix
-        _this.mat_t.push(_this.data[c]);
+        _this.mat_t.push(_this.myData[c]);
     });
     this.matrix = numeric.transpose(_this.mat_t);
     this.normalizeGroups(groupColumns);
@@ -220,5 +223,5 @@ Radviz.prototype.normalizeGroups = function(groupColumns){
 };
 
 Radviz.prototype.getDimensionNames = function () {
-    return Object.keys(this.data);
+    return Object.keys(this.myData);
 };
