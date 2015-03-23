@@ -131,7 +131,6 @@ RadvizInterface.prototype.removeGroup = function (groupId) {
 RadvizInterface.prototype.addDimensionsToGroup = function(dimensionsId, groupId){
     if (dimensionsId.constructor !== Array) return;
     for (var dimensionId in dimensionsId){
-        console.log(dimensionId);
         dimensionId = parseInt(dimensionId);
         groupId = parseInt(groupId);
         this.dimensions[dimensionId].available = false;

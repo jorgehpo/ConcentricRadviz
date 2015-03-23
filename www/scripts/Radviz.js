@@ -3,7 +3,7 @@ function Radviz(data){
         throw "Error. Radviz requires a dataset to work with."
     }
     this.myData = data;
-    //this.normalizeData();
+    this.normalizeData();
     this.isContinuous = true;
     this.matrix = [[]];
     this.dimNames = Object.keys(data);
@@ -12,19 +12,19 @@ function Radviz(data){
 }
 
 
-Radviz.prototype.asFactor = function(data)
+Radviz.prototype.asFactor = function(d)
 {
     var map = {},unique=[], factor = [], contUnique = 1;
-    for(var i = 0; i < data.length; i++)
+    for(var i = 0; i < d.length; i++)
     {
-        if (!map[data[i]])
+        if (!map[d[i]])
         {
-            map[data[i]] = contUnique;
+            map[d[i]] = contUnique;
             factor.push(contUnique);
-            unique.push(data[i]);
+            unique.push(d[i]);
             contUnique++;
         }else{
-            factor.push(map[data[i]]);
+            factor.push(map[d[i]]);
         }
     }
     return {mapElements: map, factor: factor};
