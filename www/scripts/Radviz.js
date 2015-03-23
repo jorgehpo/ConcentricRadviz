@@ -92,7 +92,7 @@ Radviz.prototype.compute_yi = function(){
         var aux_yi = 0;
         var x = this.matrix[i];
         for (var j = 0; j < x.length; j++){
-            aux_yi += x[j] * (1+ _this.weights[j] * _this.sigmoid(x[j]));
+            aux_yi += x[j] * (/*1+*/ _this.weights[j] * _this.sigmoid(x[j]));
         }
         if (aux_yi == 0) aux_yi = 1;
         this.yi.push(aux_yi)
@@ -111,7 +111,7 @@ Radviz.prototype.setAnchors = function(anchors) {
         if (!a.available) {
             colNames.push(a.attribute);
             _this.anchorAngles.push((a.pos*Math.PI*2)/360); //converts from degree (D3) to radians (js math)
-            _this.weights.push(a.weight -1);
+            _this.weights.push(a.weight /*-1*/);
             if (!groupColumns[a.group]){
                 groupColumns[a.group] = []
             }
@@ -134,7 +134,7 @@ Radviz.prototype.updateAnchors = function(anchors) {
             if (isNaN(a.weight)){
                 _this.weights.push(0);
             }else{
-                _this.weights.push(a.weight-1);
+                _this.weights.push(a.weight/*-1*/);
             }
         }
     });
@@ -163,8 +163,8 @@ Radviz.prototype.computeProjection = function() {
         var _x = 0, _y = 0;
         var matrix_i = this.matrix[i];
         for (var j = 0; j < ncol; j++) {
-            _x += anchors[j][0] * matrix_i[j] * (1 + this.weights[j] * this.sigmoid(matrix_i[j]));
-            _y += anchors[j][1] * matrix_i[j] * (1 + this.weights[j] * this.sigmoid(matrix_i[j]));
+            _x += anchors[j][0] * matrix_i[j] * (/*1 +*/ this.weights[j] * this.sigmoid(matrix_i[j]));
+            _y += anchors[j][1] * matrix_i[j] * (/*1 +*/this.weights[j] * this.sigmoid(matrix_i[j]));
         }
         _x = _x / this.yi[i];
         _y = _y / this.yi[i];
