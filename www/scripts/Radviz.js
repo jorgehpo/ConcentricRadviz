@@ -16,6 +16,7 @@ function Radviz(data){
 Radviz.prototype.updateSigmoid = function (translate,scale) {
     this.translate = translate;
     this.scale = scale;
+    this.compute_yi();
 };
 
 
