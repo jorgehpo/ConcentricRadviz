@@ -9,7 +9,14 @@ function Radviz(data){
     this.dimNames = Object.keys(data);
     this.colors = numeric.rep([this.myData[this.dimNames[0]].length], 0);
     this.selected = {};
+    this.translate = -0.5;
+    this.scale = 10;
 }
+
+Radviz.prototype.updateSigmoid = function (translate,scale) {
+    this.translate = translate;
+    this.scale = scale;
+};
 
 
 Radviz.prototype.asFactor = function(d)
@@ -78,9 +85,7 @@ Radviz.prototype.sigmoid = function(x){
     //sigmoid = 1/(1+exp(-x)) //image == [0,1]
     //sigmoid compressed [-1/2,1/2] = 1/(1+exp(-10x))
     //sigmoid compressed translated [0, 1] = 1/(1+exp(-10*x + 5))
-    var scale = 10;
-    var translate = -0.5;
-    return (1/(1+Math.exp(-(scale*(x + translate)))));
+    return (1/(1+Math.exp(-(this.scale*(x + this.translate)))));
     //return (1/(1+Math.exp(-10*x+5))); //D = [0,1] Im = [0,1]
 };
 

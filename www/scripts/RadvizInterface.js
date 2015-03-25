@@ -22,6 +22,7 @@ function RadvizInterface(radviz,radViews) {
     this.dynamicColor = false;
     this.currentSelection = [];
     this.currentSelectionMode = "reset";
+    this.sigmoid = new Sigmoid("#drawSigmoid",this.updateSigmoid);
 
     $("#tooltipDimension").append("<option value='-1'>None</option>");
     $("#colorDimension").append("<option value='-1'>None</option>");
@@ -372,4 +373,10 @@ RadvizInterface.prototype.selectMultipleItems = function (selection) {
     }
     this.radviz.setSelected(this.currentSelection);
     this.drawPoints();
+};
+
+RadvizInterface.prototype.updateSigmoid = function (translate,scale) {
+    var _this = this;
+    window.radInterface.radviz.updateSigmoid(translate,scale);
+    window.radInterface.drawPoints();
 };

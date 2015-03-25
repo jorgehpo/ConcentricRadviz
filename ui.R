@@ -14,6 +14,7 @@ shinyUI(
       tags$script(type="text/javascript", src="jquery.ui/jquery-ui.min.js"),
       tags$script(type="text/javascript", src= "scripts/Tooltip.js"),
       tags$script(type="text/javascript", src= "scripts/Selector.js"),
+      tags$script(type="text/javascript", src= "scripts/Sigmoid.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizInterface.js"),
       tags$script(type="text/javascript", src= "scripts/Radviz.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizViews.js"),
@@ -46,7 +47,10 @@ shinyUI(
           ),
           tags$div(id="dimensionSlider",class="hidden",sliderInput("dimensionSliderController", label = "Slider",min = 1, max = 100000, step = 0.1, value = 1)),
           selectInput(inputId = "tooltipDimension", label = "Tooltip Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
-          selectInput(inputId = "colorDimension", label = "Color Dimension", choices = c(), selected = "Draw Selection", multiple = FALSE, selectize=FALSE)
+          selectInput(inputId = "colorDimension", label = "Color Dimension", choices = c(), selected = "Draw Selection", multiple = FALSE, selectize=FALSE),
+          tags$div(id="sigmoidTranslateSlider",class="",sliderInput("sigmoidTranslateSliderController", label = "Sigmoid Translate",min = -1.0, max = 1.0, step = 0.01, value = 0.5)),
+          tags$div(id="sigmoidScaleSlider",class="",sliderInput("sigmoidScaleSliderController", label = "Sigmoid Scale",min = 0.1, max = 100.0, step = 0.1, value = 10.0)),
+          tags$div(id="drawSigmoid",class="",style="height: 120px; width: 100%")
         ),
         column(6,RadvizCanvas("myCanvas")),
         column(3,class="well",strong('Selector'),

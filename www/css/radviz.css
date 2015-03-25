@@ -91,3 +91,14 @@ body {
 #selectionList {
     height: 300px;
 }
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: lightgrey;
+    shape-rendering: crispEdges;
+}
+
+.axis.y text {
+    fill: none;
+}
