@@ -23,6 +23,7 @@ function RadvizInterface(radviz,radViews) {
     this.currentSelection = [];
     this.currentSelectionMode = "reset";
     this.sigmoid = new Sigmoid("#drawSigmoid",this.updateSigmoid);
+    this.tsp = new TSP(this.reorderDimensionGroup);
 
     $("#tooltipDimension").append("<option value='-1'>None</option>");
     $("#colorDimension").append("<option value='-1'>None</option>");
@@ -128,21 +129,31 @@ RadvizInterface.prototype.removeGroup = function (groupId) {
     this.draw();
 };
 
-//Fabio nao fique bravo...
-RadvizInterface.prototype.addDimensionsToGroup = function(dimensionsId, groupId){
-    if (dimensionsId.constructor !== Array) return;
-    for (var dimensionId in dimensionsId){
-        dimensionId = parseInt(dimensionId);
-        groupId = parseInt(groupId);
-        this.dimensions[dimensionId].available = false;
-        this.dimensions[dimensionId].group = groupId;
-        this.dimensionsGroups[groupId].dimensions.push(dimensionId);
-        this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
-    }
-    this.radviz.setAnchors(this.dimensions);
-    this.drawPoints();
-    this.draw();
+RadvizInterface.prototype.reorderDimensionGroup = function (orderObj) {
+    //orderObj.cities;
+    //orderObj.groupId;
+    console.log("Reorder");
+    console.log(orderObj);
+    //this.dimensionsGroups[newOrder.group].dimensions = newOrder.dimensions;
+    //this.radviz.setAnchors(this.dimensions);
+    //this.drawPoints();
+    //this.draw();
 };
+//
+//RadvizInterface.prototype.addDimensionsToGroup = function(dimensionsId, groupId){
+//    if (dimensionsId.constructor !== Array) return;
+//    for (var dimensionId in dimensionsId){
+//        dimensionId = parseInt(dimensionId);
+//        groupId = parseInt(groupId);
+//        this.dimensions[dimensionId].available = false;
+//        this.dimensions[dimensionId].group = groupId;
+//        this.dimensionsGroups[groupId].dimensions.push(dimensionId);
+//        this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
+//    }
+//    this.radviz.setAnchors(this.dimensions);
+//    this.drawPoints();
+//    this.draw();
+//};
 
 RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     dimensionId = parseInt(dimensionId);
@@ -151,6 +162,7 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.dimensions[dimensionId].group = groupId;
     this.dimensionsGroups[groupId].dimensions.push(dimensionId);
     this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
+    //this.tsp.solveTSPCities(this.dimensionsGroups[groupId].dimensions,groupId);
     this.radviz.setAnchors(this.dimensions);
     this.drawPoints();
     this.draw();

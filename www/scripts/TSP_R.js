@@ -6,10 +6,11 @@ function TSP(callbackSolution){
     );
 }
 
-TSP.prototype.solveTSPCities = function(cities){
+TSP.prototype.solveTSPCities = function(cities, groupId){
     //send data to R
     //remember in R code that cities is 0-based. index (cities +1)
-    Shiny.onInputChange("cities", cities);
+    var cityObj = {cities:cities,groupId:groupId};
+    Shiny.onInputChange("cityObj", cityObj);
 };
 
 

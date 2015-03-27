@@ -72,6 +72,24 @@ RadvizViews.prototype.removeDimensionsGroup = function (idx) {
     }
 };
 
+//RadvizViews.prototype.reorderGroup = function (groupId,newOrder) {
+//    console.log(this.groups[groupId].dimensions);
+//    var newDimArray = [];
+//    var _this = this;
+//    newOrder.forEach(function (item) {
+//        var element = 0;
+//        while (_this.groups[groupId].dimensions[element]) {
+//            if (_this.groups[groupId].dimensions[element].id == item) {
+//                newDimArray.push(_this.groups[groupId].dimensions[element]);
+//                element = 1000;
+//            }
+//            element++;
+//        }
+//    });
+//    this.groups[groupId].dimensions = newDimArray;
+//
+//};
+
 RadvizViews.prototype.addDimensionToGroup = function (dimension,groupId) {
     this.groups[groupId].dimensions.push(dimension);
     this.drawDimensions(groupId);

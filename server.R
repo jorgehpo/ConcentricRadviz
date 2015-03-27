@@ -20,13 +20,21 @@ shinyServer(function(input, output,session) {
   
   observe(
     {
-      input$cities
-      if (!is.null(session$dataRadviz)){
-        dataCols = session$dataRadviz[input$cities+1] #input$cities eh 0-based (javascript)
-        mat = 1-cor(dataCols)
-        order = as.integer(solve_TSP(TSP(mat)))
-        session$sendCustomMessage(type='MessageTSPSolved',input$cities[order])
-      }
+      input$cityObj
+      cat("cities",unlist(input$cityObj$cities),"\n")
+      cat("groupId",input$cityObj$groupId,"\n")
+
+#      if (!is.null(session$dataRadviz)){
+
+#      }
+#        dataCols = session$dataRadviz[unlist(input$cityObj$cities)+1] #input$cities eh 0-based (javascript)
+#        mat = 1-cor(dataCols)
+#        order = as.integer(solve_TSP(TSP(mat)))
+#        returnObj = list()
+#        returnObj$cities = input$cityObj$cities[order];
+#        returnObj$groupId = input$cityObj$groupId;
+#        session$sendCustomMessage(type='MessageTSPSolved',returnObj)
+#      }
     }
   )
 })
