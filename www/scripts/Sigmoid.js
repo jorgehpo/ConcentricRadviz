@@ -1,7 +1,7 @@
 function Sigmoid(element,callback) {
     this.el = element;
     this.scale = 10.0;
-    this.translate = 0.5;
+    this.translate = -0.5;
     this.callback = callback;
     this.initEvents();
     this.draw();
@@ -42,7 +42,7 @@ Sigmoid.prototype.draw = function () {
 
     var x = d3.scale.linear()
         .range([12, width-12])
-        .domain([-1,1]);
+        .domain([0,1]);
 
     var y = d3.scale.linear()
         .range([height-2, 2])

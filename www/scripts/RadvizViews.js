@@ -122,14 +122,14 @@ RadvizViews.prototype.drawDimensions = function (groupId) {
     var i = groupId; // porco pra tirar o for e desenhar só a dimensão groupId
     //for (var i = 0; i < this.groups.length; ++i) {
         if (this.groups[i]) {
-            var elements = this.groups[i].dimensions.length;
-            var distance = 360;
-            if (elements > 0) {
-                distance = 360 / elements;
-            }
+            //var elements = this.groups[i].dimensions.length;
+            //var distance = 360;
+            //if (elements > 0) {
+            //    distance = 360 / elements;
+            //}
             d3.selectAll(".element-dimension-group-" + i).remove();
             this.groups[i].dimensions.forEach(function (d,di) {
-                _this.groups[i].dimensions[di].pos = distance * di;
+                //_this.groups[i].dimensions[di].pos = distance * di;
                 var dimG = _this.svg.append("g")
                     .attr("class", "dimension dimension-" + d.id + " element-dimension-group-" + i)
                     .attr('data-element', di)
@@ -244,6 +244,14 @@ RadvizViews.prototype.drawDimensions = function (groupId) {
             }
         }
     });
+};
+
+RadvizViews.prototype.updateDimensionPosition = function (dimensionId,groupId,pos) {
+    var _this = this;
+    d3.select(".dimension-" + dimensionId).attr("transform", "rotate(" + pos + ")");
+    d3.select(".dimension-" + dimensionId).attr("data-pos", pos);
+    d3.select(".dimension-" + dimensionId + " text").attr("data-pos", pos);
+    d3.select(".dimension-" + dimensionId + " text").attr("transform", "translate(" + _this.groups[groupId].radius + ",0) rotate(" + (180 - pos) + ") scale(-1,1)");
 };
 
 RadvizViews.prototype.getSmallestCircleRadius = function () {

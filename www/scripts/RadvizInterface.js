@@ -130,14 +130,20 @@ RadvizInterface.prototype.removeGroup = function (groupId) {
 };
 
 RadvizInterface.prototype.reorderDimensionGroup = function (orderObj) {
-    //orderObj.cities;
-    //orderObj.groupId;
-    console.log("Reorder");
     console.log(orderObj);
-    //this.dimensionsGroups[newOrder.group].dimensions = newOrder.dimensions;
-    //this.radviz.setAnchors(this.dimensions);
-    //this.drawPoints();
-    //this.draw();
+    var _this = window.radInterface;
+    var spacing = (orderObj.cities.length > 0) ? 360/orderObj.cities.length : 0;
+    _this.dimensions.forEach(function (item,idx) {
+        if (item.group === orderObj.groupId) {
+            if (orderObj.cities.indexOf(item.id) >= 0) {
+                item.pos = spacing * orderObj.cities.indexOf(item.id);
+                _this.radvizViews.updateDimensionPosition(item.id,item.group,item.pos);
+            }
+        }
+    });
+    _this.radviz.setAnchors(_this.dimensions);
+    _this.drawPoints();
+    _this.draw();
 };
 //
 //RadvizInterface.prototype.addDimensionsToGroup = function(dimensionsId, groupId){

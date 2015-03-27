@@ -21,16 +21,18 @@ shinyServer(function(input, output,session) {
   observe(
     {
       input$cityObj
-      cat("cities",unlist(input$cityObj$cities)+1,"\n")
-      cat("groupId",input$cityObj$groupId,"\n")
-      
+      print(input$cityObj)
       if (!is.null(session$dataRadviz)){
         cities = unlist(input$cityObj$cities)
         groupId = unlist(input$cityObj$groupId)
         if (length(cities) > 0){
-          dataCols = session$dataRadviz[,cities+1]
-          mat = 1-cor(as.matrix(dataCols))
-          order = as.integer(solve_TSP(TSP(mat)))
+          dataCols = as.matrix(session$dataRadviz[,cities+1])
+          if(length(cities)<=2){
+            order = 1:length(cities)
+          }else{
+            mat = 1-cor(dataCols)
+            order = solve_TSP(TSP(mat))
+          }
           returnObj = list()
           returnObj$cities = input$cityObj$cities[order];
           returnObj$groupId = input$cityObj$groupId;
