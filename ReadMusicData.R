@@ -30,18 +30,16 @@ generateDataRecursive <- function(json.folder, genre = "genre_tzanetakis"){
   
   
   colnames(mat) = varNames
-  ret = list()
-  ret$tags = list()
-  ret$tags$title = c()
-  ret$tags$artist = c()
-  ret$tags$filename = c()
+  title = c()
+  artist = c()
+  filename = c()
   for (fid in seq_len(length(files))){
     js = fromJSON(files[fid])
     bname = basename(files[fid])
-    ret$tags$filename = c(ret$tags$filename, substr(bname,start = 1, stop = nchar(bname) - 9)) #remove ".mp3.jpson"
+    filename = c(filename, substr(bname,start = 1, stop = nchar(bname) - 9)) #remove ".mp3.jpson"
     
-    ret$tags$title = c(ret$tags$title, js$metadata$tags$title)
-    ret$tags$artist = c(ret$tags$artist, js$metadata$tags$artist)
+    title = c(title, js$metadata$tags$title)
+    artist = c(artist, js$metadata$tags$artist)
     vars = unlist(js$highlevel,recursive = T)
     nums = as.numeric(vars)
     nums = nums[-ignoreIDs]
@@ -49,43 +47,7 @@ generateDataRecursive <- function(json.folder, genre = "genre_tzanetakis"){
   }
   mat = as.data.frame(mat)
   
-  tooltip = ret$tags$filename
-  
-  mat = cbind(mat,tooltip)
+  mat = cbind(mat,filename, title, artist)
   
   return (mat)
-}
-
-
-generateDataGenre <- function(json.folder, genreType = "genre_tzanetakis"){
-  files= list.files(json.folder,recursive = T,full.names = T)
-  js = fromJSON(files[1])
-  genres = names(js$highlevel[[genreType]]$all)
-  matGenre = matrix(0, nrow = length(files), ncol = length(genres))
-  classes = c()
-  songTitles = c()
-  songArtists = c()
-  for (fid in seq_len(length(files))){
-    js = fromJSON(files[fid])
-    classes = c(classes, js$highlevel[[genreType]]$value)
-    for (gid in seq_len(length(genres))){
-      g = genres[gid]
-      matGenre[fid, gid] = js$highlevel[[genreType]]$all[[g]] 
-    }
-    songTitles = c(songTitles, js$metadata$tags$title)
-    songArtists = c(songArtists, js$metadata$tags$artist)
-  }
-  
-  ret = list()
-  
-  ret$songClass = classes
-  
-  ret$tags = list()
-  ret$tags$songTitles = songTitles
-  ret$tags$songArtists = songArtists
-  
-  ret$dataFrame = matGenre
-  ret$varNames = genres
-  
-  return (ret)
 }

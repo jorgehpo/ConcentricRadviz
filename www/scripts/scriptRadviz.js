@@ -1,5 +1,9 @@
 //scriptRadviz.js #main function called from R shiny
 
+function myCallbackTSP(x){
+    alert(x);
+}
+
 var networdOutputBindingRadviz = new Shiny.OutputBinding();
 $.extend(networdOutputBindingRadviz, {
     find: function (scope) {
@@ -10,7 +14,6 @@ $.extend(networdOutputBindingRadviz, {
             return;
         }
         var radviz = new Radviz(info);
-
 
         if (window.radInterface) {
             window.radInterface.destroy();
@@ -24,9 +27,12 @@ $.extend(networdOutputBindingRadviz, {
             cols.push(i);
         }
         window.radInterface.addDimensionsToGroup(cols,0);
-        //for (var i = 0; i < Math.min(10,Object.keys(info).length); i++) window.radInterface.addDimensionToGroup(i,0)
+
+        var myTSP = new TSP(myCallbackTSP);
+        myTSP.solveTSPCities([0,1,2,3]);
+
     }//renderValue function
-})//extend networkOutputBindingRadviz
+});//extend networkOutputBindingRadviz
 
 
 Shiny.outputBindings.register(networdOutputBindingRadviz, 'binding.radviz');

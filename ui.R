@@ -17,6 +17,7 @@ shinyUI(
       tags$script(type="text/javascript", src= "scripts/Sigmoid.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizInterface.js"),
       tags$script(type="text/javascript", src= "scripts/Radviz.js"),
+      tags$script(type="text/javascript", src= "scripts/TSP_R.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizViews.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizDimensionGroup.js"),
       tags$script(type="text/javascript", src= "scripts/scriptRadviz.js")
