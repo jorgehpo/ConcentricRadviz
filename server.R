@@ -21,20 +21,22 @@ shinyServer(function(input, output,session) {
   observe(
     {
       input$cityObj
-      cat("cities",unlist(input$cityObj$cities),"\n")
+      cat("cities",unlist(input$cityObj$cities)+1,"\n")
       cat("groupId",input$cityObj$groupId,"\n")
-
-#      if (!is.null(session$dataRadviz)){
-
-#      }
-#        dataCols = session$dataRadviz[unlist(input$cityObj$cities)+1] #input$cities eh 0-based (javascript)
-#        mat = 1-cor(dataCols)
-#        order = as.integer(solve_TSP(TSP(mat)))
-#        returnObj = list()
-#        returnObj$cities = input$cityObj$cities[order];
-#        returnObj$groupId = input$cityObj$groupId;
-#        session$sendCustomMessage(type='MessageTSPSolved',returnObj)
-#      }
+      
+      if (!is.null(session$dataRadviz)){
+        cities = unlist(input$cityObj$cities)
+        groupId = unlist(input$cityObj$groupId)
+        if (length(cities) > 0){
+          dataCols = session$dataRadviz[,cities+1]
+          mat = 1-cor(as.matrix(dataCols))
+          order = as.integer(solve_TSP(TSP(mat)))
+          returnObj = list()
+          returnObj$cities = input$cityObj$cities[order];
+          returnObj$groupId = input$cityObj$groupId;
+          session$sendCustomMessage(type='MessageTSPSolved',returnObj)
+        }
+      }
     }
   )
 })

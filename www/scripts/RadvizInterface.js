@@ -162,7 +162,7 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.dimensions[dimensionId].group = groupId;
     this.dimensionsGroups[groupId].dimensions.push(dimensionId);
     this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
-    //this.tsp.solveTSPCities(this.dimensionsGroups[groupId].dimensions,groupId);
+    this.tsp.solveTSPCities(this.dimensionsGroups[groupId].dimensions,groupId);
     this.radviz.setAnchors(this.dimensions);
     this.drawPoints();
     this.draw();
