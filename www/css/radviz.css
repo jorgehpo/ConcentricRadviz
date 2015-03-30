@@ -102,3 +102,7 @@ body {
 .axis.y text {
     fill: none;
 }
+
+.hide {
+    visibility: hidden;
+}

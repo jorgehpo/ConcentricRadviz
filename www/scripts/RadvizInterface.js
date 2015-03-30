@@ -22,6 +22,7 @@ function RadvizInterface(radviz,radViews) {
     this.dynamicColor = false;
     this.currentSelection = [];
     this.currentSelectionMode = "reset";
+    this.selectionVisibilityMode = "show-all"
     this.sigmoid = new Sigmoid("#drawSigmoid",this.updateSigmoid);
     this.tsp = new TSP(this.reorderDimensionGroup);
 
@@ -292,7 +293,17 @@ RadvizInterface.prototype.drawPoints = function () {
             .data(proj)
             .enter().append("circle")
             .attr("class", function (d,idx) {
-                return "dot dot-id-" + idx;
+                var hide = "";
+                if (d.selected) {
+                    if (_this.selectionVisibilityMode == "hide-selected") {
+                        hide = "hide";
+                    }
+                } else {
+                    if (_this.selectionVisibilityMode == "hide-unselected") {
+                        hide = "hide";
+                    }
+                }
+                return "dot dot-id-" + idx + " " + hide;
             })
             .style("fill", function (d) {
                 if (_this.dynamicColor) {
@@ -391,6 +402,11 @@ RadvizInterface.prototype.selectMultipleItems = function (selection) {
     }
     this.radviz.setSelected(this.currentSelection);
     this.drawPoints();
+};
+
+RadvizInterface.prototype.setSelectionAction = function (actionMode) {
+    window.radInterface.selectionVisibilityMode = actionMode;
+    window.radInterface.drawPoints();
 };
 
 RadvizInterface.prototype.updateSigmoid = function (translate,scale) {

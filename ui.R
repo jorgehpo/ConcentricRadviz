@@ -58,7 +58,8 @@ shinyUI(
           includeHTML("selectorButtons.html"),
           tags$hr(),
           selectInput(inputId = "listDimension", label = "Label Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
-          selectInput(inputId = "selectionList", label = "Selected Elements", choices = c(), selected = NULL, multiple = TRUE, selectize=FALSE)
+          selectInput(inputId = "selectionList", label = "Selected Elements", choices = c(), selected = NULL, multiple = TRUE, selectize=FALSE),
+          includeHTML("selectorButtons2.html")
 
         )
       )

@@ -18,6 +18,17 @@ Selector.prototype.initEvents = function () {
 	$("#btn-sub-selection").on("click", function () {
 		_this.interface.currentSelectionMode = "sub";
 	});
+
+
+	$("#btn-hide-selected").on("click", function () {
+		_this.interface.setSelectionAction('hide-selected');
+	});
+	$("#btn-hide-unselected").on("click", function () {
+		_this.interface.setSelectionAction('hide-unselected');
+	});
+	$("#btn-show-all").on("click", function () {
+		_this.interface.setSelectionAction('show-all');
+	});
 };
 
 Selector.prototype.initPolybrush = function (svg) {
