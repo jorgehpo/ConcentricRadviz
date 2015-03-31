@@ -22,9 +22,15 @@ function RadvizInterface(radviz,radViews) {
     this.dynamicColor = false;
     this.currentSelection = [];
     this.currentSelectionMode = "reset";
-    this.selectionVisibilityMode = "show-all"
+    this.selectionVisibilityMode = "show-all";
     this.sigmoid = new Sigmoid("#drawSigmoid",this.updateSigmoid);
-    this.tsp = new TSP(this.reorderDimensionGroup);
+
+    //Chupa design pattern. Fabio nao sei usar singleton
+    if (!window.tsp) {
+        window.tsp = new TSP(this.reorderDimensionGroup);
+    }else{
+        window.tsp.setCallbackSolution(this.reorderDimensionGroup);
+    }
 
     $("#tooltipDimension").append("<option value='-1'>None</option>");
     $("#colorDimension").append("<option value='-1'>None</option>");
@@ -131,7 +137,6 @@ RadvizInterface.prototype.removeGroup = function (groupId) {
 };
 
 RadvizInterface.prototype.reorderDimensionGroup = function (orderObj) {
-    console.log(orderObj);
     var _this = window.radInterface;
     var spacing = (orderObj.cities.length > 0) ? 360/orderObj.cities.length : 0;
     _this.dimensions.forEach(function (item,idx) {
@@ -169,7 +174,7 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.dimensions[dimensionId].group = groupId;
     this.dimensionsGroups[groupId].dimensions.push(dimensionId);
     this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
-    this.tsp.solveTSPCities(this.dimensionsGroups[groupId].dimensions,groupId);
+    window.tsp.solveTSPCities(this.dimensionsGroups[groupId].dimensions,groupId);
     this.radviz.setAnchors(this.dimensions);
     this.drawPoints();
     this.draw();

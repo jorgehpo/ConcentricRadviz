@@ -1,10 +1,15 @@
 function TSP(callbackSolution){
-    this.description = "sends and receives data from R package TSP";
 
+    this.callbackSolution = callbackSolution;
     Shiny.addCustomMessageHandler("MessageTSPSolved",
-        callbackSolution
+        //a funcao nao vai ser a mesma (a cada inicializacao), mas funciona
+        this.callbackSolution
     );
 }
+
+TSP.prototype.setCallbackSolution = function(callbackSolution){
+    this.callbackSolution = callbackSolution;
+};
 
 TSP.prototype.solveTSPCities = function(cities, groupId){
     //send data to R
