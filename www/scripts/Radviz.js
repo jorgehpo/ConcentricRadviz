@@ -8,7 +8,8 @@ function Radviz(data){
     this.matrix = [[]];
     this.dimNames = Object.keys(data);
     this.colors = numeric.rep([this.myData[this.dimNames[0]].length], 0);
-    this.selected = {};
+    this.selected = [];
+    this.hidden = [];
     this.translate = -0.5;
     this.scale = 10;
 }
@@ -36,6 +37,24 @@ Radviz.prototype.asFactor = function(d)
         }
     }
     return {mapElements: map, factor: factor};
+};
+
+Radviz.prototype.setHideElements = function (selection) {
+    for (var id in selection){
+        this.hidden[selection[id]] = true;
+    }
+};
+
+Radviz.prototype.setHideUnselected = function (selection) {
+    for (var id = 0; id < this.matrix.length; id++){
+        if (selection.indexOf(id) < 0) { //didn't find in selection
+            this.hidden[id] = true;
+        }
+    }
+};
+
+Radviz.prototype.unhideAll = function(){
+    this.hidden = [];
 };
 
 Radviz.prototype.setSelected = function (selection) {
@@ -175,11 +194,27 @@ Radviz.prototype.computeProjection = function() {
         _x = _x / this.yi[i];
         _y = _y / this.yi[i];
         //var colorValue = FLOAT [0,1] SE ATTR COLOR NORMALIZADO / INT [0,N-1] SE NotNumber
+
         if (this.tooltip) {
-            proj.push({x: _x, y: _y, tip: this.tooltip[i],color: this.colors[i],selected: (this.selected[i]?true:false)});
+            proj.push({
+                x: _x,
+                y: _y,
+                tip: this.tooltip[i],
+                color: this.colors[i],
+                selected: (this.selected[i] ? true : false),
+                hidden:this.hidden[i]
+            });
         } else {
-            proj.push({x: _x, y: _y, tip: null, color: this.colors[i],selected: (this.selected[i]?true:false)});
+            proj.push({
+                x: _x,
+                y: _y,
+                tip: null,
+                color: this.colors[i],
+                selected: (this.selected[i] ? true : false),
+                hidden:this.hidden[i]
+            });
         }
+
     }
     return (proj)
 };//end - function computeProjection

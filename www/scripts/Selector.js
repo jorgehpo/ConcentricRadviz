@@ -21,13 +21,13 @@ Selector.prototype.initEvents = function () {
 
 
 	$("#btn-hide-selected").on("click", function () {
-		_this.interface.setSelectionAction('hide-selected');
+		_this.interface.doSelectionAction('hide-selected');
 	});
 	$("#btn-hide-unselected").on("click", function () {
-		_this.interface.setSelectionAction('hide-unselected');
+		_this.interface.doSelectionAction('hide-unselected');
 	});
 	$("#btn-show-all").on("click", function () {
-		_this.interface.setSelectionAction('show-all');
+		_this.interface.doSelectionAction('show-all');
 	});
 };
 
@@ -49,11 +49,13 @@ Selector.prototype.initPolybrush = function (svg) {
 			svg.selectAll(".dot")
 				.classed("selected", function(d) {
 					var id = d3.select(this).attr("id");
-					if (_this.brush.isWithinExtent(parseFloat(d3.select(this).attr("cx")), parseFloat(d3.select(this).attr("cy")))) {
-						_this.selectedElements.push(parseInt(d3.select(this).attr("id")));
-						return true;
-					} else {
-						return false;
+					if (parseInt(d3.select(this).attr("data-is-hidden")) == 0) {
+						if (_this.brush.isWithinExtent(parseFloat(d3.select(this).attr("cx")), parseFloat(d3.select(this).attr("cy")))) {
+							_this.selectedElements.push(parseInt(d3.select(this).attr("id")));
+							return true;
+						} else {
+							return false;
+						}
 					}
 				});
 			});

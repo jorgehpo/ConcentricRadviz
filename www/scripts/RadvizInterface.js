@@ -22,7 +22,6 @@ function RadvizInterface(radviz,radViews) {
     this.dynamicColor = false;
     this.currentSelection = [];
     this.currentSelectionMode = "reset";
-    this.selectionVisibilityMode = "show-all";
     this.sigmoid = new Sigmoid("#drawSigmoid",this.updateSigmoid);
 
     //Chupa design pattern. Fabio nao sei usar singleton
@@ -298,17 +297,18 @@ RadvizInterface.prototype.drawPoints = function () {
             .data(proj)
             .enter().append("circle")
             .attr("class", function (d,idx) {
-                var hide = "";
-                if (d.selected) {
-                    if (_this.selectionVisibilityMode == "hide-selected") {
-                        hide = "hide";
-                    }
+                if (d.hidden) {
+                    return "dot dot-id-" + idx + " hide";
                 } else {
-                    if (_this.selectionVisibilityMode == "hide-unselected") {
-                        hide = "hide";
-                    }
+                    return "dot dot-id-" + idx;
                 }
-                return "dot dot-id-" + idx + " " + hide;
+            })
+            .attr("data-is-hidden", function (d,idx) {
+                if (d.hidden) {
+                    return "1";
+                } else {
+                    return "0";
+                }
             })
             .style("fill", function (d) {
                 if (_this.dynamicColor) {
@@ -409,8 +409,17 @@ RadvizInterface.prototype.selectMultipleItems = function (selection) {
     this.drawPoints();
 };
 
-RadvizInterface.prototype.setSelectionAction = function (actionMode) {
-    window.radInterface.selectionVisibilityMode = actionMode;
+RadvizInterface.prototype.doSelectionAction = function (actionMode) {
+    if (actionMode == 'show-all') {
+        window.radInterface.radviz.unhideAll();
+    } else if (actionMode == 'hide-selected') {
+        window.radInterface.radviz.setHideElements(window.radInterface.currentSelection);
+    } else if (actionMode == 'hide-unselected') {
+        window.radInterface.radviz.setHideUnselected(window.radInterface.currentSelection);
+    }
+    window.radInterface.currentSelection=[];
+    window.radInterface.radviz.setSelected(this.currentSelection);
+
     window.radInterface.drawPoints();
 };
 
