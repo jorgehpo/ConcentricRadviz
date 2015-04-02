@@ -3,7 +3,7 @@ function Radviz(data){
         throw "Error. Radviz requires a dataset to work with."
     }
     this.colorIsDensity = true;
-    this.GRID_N = 50;
+    this.GRID_N = 100;
     this.myData = data;
     this.normalizeData();
     this.isContinuous = true;

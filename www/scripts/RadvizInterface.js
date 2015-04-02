@@ -33,6 +33,7 @@ function RadvizInterface(radviz,radViews) {
 
     $("#tooltipDimension").append("<option value='-1'>None</option>");
     $("#colorDimension").append("<option value='-1'>None</option>");
+    $("#colorDimension").append("<option value='99999'>Density</option>");
 
     var _this = this;
     this.radviz.getDimensionNames().forEach(function (item,idx) {
@@ -62,7 +63,11 @@ function RadvizInterface(radviz,radViews) {
         var dimensionId = parseInt($(this).val());
         if (dimensionId >= 0) {
             _this.dynamicColor = true;
-            _this.radviz.setColorsColumnId(dimensionId);
+            if (dimensionId < 99999) {
+                _this.radviz.setColorsColumnId(dimensionId);
+            } else {
+                _this.radviz.setColorsColumnId("density");
+            }
         } else {
             _this.dynamicColor = false;
         }
