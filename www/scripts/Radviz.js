@@ -2,6 +2,8 @@ function Radviz(data){
     if (!data){
         throw "Error. Radviz requires a dataset to work with."
     }
+    this.colorIsDensity = true;
+    this.GRID_N = 50;
     this.myData = data;
     this.normalizeData();
     this.isContinuous = true;
@@ -68,13 +70,20 @@ Radviz.prototype.setSelected = function (selection) {
 };
 
 Radviz.prototype.setColorsColumnId = function (columnId) {
-    if (isNaN(this.myData[this.dimNames[columnId]][0])){
-        this.isContinuous = false;
-        var factor = this.asFactor(this.myData[this.dimNames[columnId]]);
-        this.colors = factor.factor;
-    }else{
+    if (columnId == "density"){
+        this.colorIsDensity = true;
         this.isContinuous = true;
-        this.colors = this.myData[this.dimNames[columnId]];
+        this.colors = numeric.rep([this.myData[this.dimNames[0]].length], 0);
+    }else {
+        this.colorIsDensity = false;
+        if (isNaN(this.myData[this.dimNames[columnId]][0])) {
+            this.isContinuous = false;
+            var factor = this.asFactor(this.myData[this.dimNames[columnId]]);
+            this.colors = factor.factor;
+        } else {
+            this.isContinuous = true;
+            this.colors = this.myData[this.dimNames[columnId]];
+        }
     }
 };
 
@@ -180,6 +189,8 @@ Radviz.prototype.computeProjection = function() {
     if (this.matrix[0].length == 0){
         return ([]);
     }
+    this.densityGrid = new Uint32Array(this.GRID_N*this.GRID_N);
+    this.maxDensity = 0;
     var anchors = this.anglesToXY();
     var nrow = this.matrix.length;
     var ncol = this.matrix[0].length;
@@ -194,6 +205,15 @@ Radviz.prototype.computeProjection = function() {
         _x = _x / this.yi[i];
         _y = _y / this.yi[i];
         //var colorValue = FLOAT [0,1] SE ATTR COLOR NORMALIZADO / INT [0,N-1] SE NotNumber
+
+        //Density of points
+        //{_x,_y} \in R^2 | |x| <= 1 and |y| < 1
+        var posGridX = Math.floor((_x+1) * this.GRID_N / 2);
+        var posGridY = Math.floor((_y+1) * this.GRID_N / 2);
+        var newD = ++this.densityGrid[posGridY * this.GRID_N + posGridX];
+        if (newD > this.maxDensity){
+            this.maxDensity = newD;
+        }
 
         if (this.tooltip) {
             proj.push({
@@ -216,6 +236,20 @@ Radviz.prototype.computeProjection = function() {
         }
 
     }
+
+    if (this.maxDensity == 0){
+        this.maxDensity = 1;
+    }
+
+    if (this.colorIsDensity){
+        for (var i = 0; i < nrow; i++) {
+            var posGridX = Math.floor((proj[i].x+1) * this.GRID_N / 2);
+            var posGridY = Math.floor((proj[i].y+1) * this.GRID_N / 2);
+            proj[i].color = this.densityGrid[posGridY * this.GRID_N + posGridX] / this.maxDensity;
+        }
+    }
+
+
     return (proj)
 };//end - function computeProjection
 
