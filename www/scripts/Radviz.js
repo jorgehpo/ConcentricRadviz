@@ -4,6 +4,8 @@ function Radviz(data){
     }
     this.colorIsDensity = true;
     this.GRID_N = 100;
+    this.densityGrid = new Uint32Array(this.GRID_N*this.GRID_N);
+    this.zeroGrid = new Uint32Array(this.GRID_N*this.GRID_N);
     this.myData = data;
     this.normalizeData();
     this.isContinuous = true;
@@ -189,7 +191,7 @@ Radviz.prototype.computeProjection = function() {
     if (this.matrix[0].length == 0){
         return ([]);
     }
-    this.densityGrid = new Uint32Array(this.GRID_N*this.GRID_N);
+    this.densityGrid.set(this.zeroGrid);
     this.maxDensity = 0;
     var anchors = this.anglesToXY();
     var nrow = this.matrix.length;
