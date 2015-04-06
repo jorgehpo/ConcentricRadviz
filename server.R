@@ -7,7 +7,7 @@ require(TSP)
 source("ReadMusicData.R")
 options(shiny.maxRequestSize=100*1024^2) 
 
-#concorde_path("/home/jorgehpo/Desktop/concorde/TSP")
+concorde_path("/home/jorgehpo/Desktop/concorde/TSP")
 
 shinyServer(function(input, output,session) {
   session$dataRadviz = NULL  
@@ -30,7 +30,7 @@ shinyServer(function(input, output,session) {
             order = 1:length(cities)
           }else{
             mat = 1-cor(dataCols)
-            suppressWarnings({order = solve_TSP(TSP(mat),'two_opt')})
+            suppressWarnings({order = solve_TSP(TSP(mat),'concorde')})
           }
           returnObj = list()
           returnObj$cities = input$cityObj$cities[order];

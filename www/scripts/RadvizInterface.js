@@ -116,6 +116,7 @@ RadvizInterface.prototype.addGroup = function (name,color) {
     this.uniqueGroupsCount++;
     this.radvizViews.addDimensionsGroup(gr.element);
     this.draw();
+    this.drawPoints();
 };
 
 RadvizInterface.prototype.removeGroup = function (groupId) {
@@ -180,8 +181,8 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
     window.tsp.solveTSPCities(this.dimensionsGroups[groupId].dimensions,groupId);
     this.radviz.setAnchors(this.dimensions);
-    this.drawPoints();
     this.draw();
+    this.drawPoints();
 };
 
 RadvizInterface.prototype.removeDimensionFromGroup = function (dimensionId) {
@@ -222,7 +223,7 @@ RadvizInterface.prototype.draw = function () {
                                              "<div data-group-id='" + i + "' class='sidebar-groups-list-item-element sidebar-groups-list-item-remove'>x</div>" +
                                              "<div data-group-id='" + i + "' class='sidebar-groups-list-item-element sidebar-groups-list-item-element-group-" + i + " sidebar-groups-list-item-title'>" + d.name + "</div></div>");
             d.dimensions.forEach(function (e) {
-                $(".sidebar-groups-list-item-" + i).append("<div data-dimension-id='" + e + "' class='sidebar-groups-list-item-dimension-" + e + " sidebar-groups-list-item-element droppable-element'>" + _this.dimensions[e].name + " - " + _this.dimensions[e].attribute + "</div>");
+                $(".sidebar-groups-list-item-" + i).append("<div data-dimension-id='" + e + "' class='sidebar-groups-list-item-dimension-" + e + " sidebar-groups-list-item-element droppable-element'>" + _this.dimensions[e].attribute + "</div>");
             });
         }
     });
@@ -236,7 +237,7 @@ RadvizInterface.prototype.draw = function () {
     });
     this.dimensions.forEach(function (d,i) {
         if (d.available) {
-            $(".sidebar-dimensions-list").append("<div data-dimension-id='" + i + "' class='sidebar-dimensions-list-item droppable-element'>" + d.name + " - " + d.attribute + "</div>");
+            $(".sidebar-dimensions-list").append("<div data-dimension-id='" + i + "' class='sidebar-dimensions-list-item droppable-element'>" + d.attribute + "</div>");
         }
     });
 
