@@ -282,16 +282,16 @@ Radviz.prototype.normalizeGroups = function(groupColumns){
             for (var dId in group) { //dimension ID
                 var column = group[dId];
                 for (var rId in this.mat_t[dId]) { //row id
-                    normRow[rId] += this.mat_t[column][rId] * this.mat_t[column][rId];
-                    //if (this.mat_t[column][rId] > normRow[rId]) {
-                    //    normRow[rId] = this.mat_t[column][rId];
-                    //}
+                    //normRow[rId] += this.mat_t[column][rId] * this.mat_t[column][rId];
+                    if (this.mat_t[column][rId] > normRow[rId]) {
+                        normRow[rId] = this.mat_t[column][rId];
+                    }
                 }
             }
             for (var i = 0; i < this.matrix.length; i++) {
                 if (normRow[i] > 0) {
                     for (var j = 0; j < group.length; j++) {
-                        this.matrix[i][group[j]] = this.matrix[i][group[j]] / Math.sqrt(normRow[i]);
+                        this.matrix[i][group[j]] = this.matrix[i][group[j]] / (normRow[i]);
                     }
                 }
             }

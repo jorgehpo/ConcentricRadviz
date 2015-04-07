@@ -1,5 +1,17 @@
 //scriptRadviz.js #main function called from R shiny
 
+$(document).keypress(function (eventObject) {
+    if (eventObject.keyCode == 99){ //pressed 'c'
+        var text = '';
+        var mySelect = $("#selectionList");
+        var options = mySelect.contents();
+        for (var i = 0; i < options.length; i++){
+            text = text + options[i].value + ',';
+        }
+        alert(text);
+    }
+});
+
 var networdOutputBindingRadviz = new Shiny.OutputBinding();
 $.extend(networdOutputBindingRadviz, {
     find: function (scope) {
