@@ -12,6 +12,7 @@ shinyUI(
       tags$link(rel="stylesheet", type="text/css", href="css/radviz.css"),
       tags$script(type="text/javascript", src="numericJS/numeric-1.2.6.min.js"),
       tags$script(type="text/javascript", src="jquery.ui/jquery-ui.min.js"),
+      tags$script(type="text/javascript", src="FileSaver/FileSaver.min.js"),
       tags$script(type="text/javascript", src= "scripts/Tooltip.js"),
       tags$script(type="text/javascript", src= "scripts/Selector.js"),
       tags$script(type="text/javascript", src= "scripts/Sigmoid.js"),

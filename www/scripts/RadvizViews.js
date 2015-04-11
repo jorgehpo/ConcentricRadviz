@@ -178,8 +178,10 @@ RadvizViews.prototype.drawDimensions = function (groupId) {
     });
 
     this.svg.on('mousemove', function () {
-        if (_this.drag.dragging) {
+        _this._mouseX = d3.mouse(this)[0];
+        _this._mouseY = d3.mouse(this)[1];
 
+        if (_this.drag.dragging) {
             var x = d3.mouse(this)[0];
             var y = d3.mouse(this)[1];
             if (!_this.drag.group) {
