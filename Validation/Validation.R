@@ -10,7 +10,7 @@ Recall <- function(retrieved, relevant){
   return (sum (retrieved %in% relevant) / length(relevant) )
 }
 
-MIR = read.csv("../data/MIR_Dortmund.csv")
+MIR = read.csv("data/MIR_Dortmund.csv")
 auxGenre = MIR[,6:14] #from alternative to rock
 genreClass = colnames(auxGenre)[apply(auxGenre, 1, which.max)]
 

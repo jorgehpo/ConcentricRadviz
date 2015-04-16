@@ -144,10 +144,12 @@ RadvizInterface.prototype.removeGroup = function (groupId) {
 RadvizInterface.prototype.reorderDimensionGroup = function (orderObj) {
     var _this = window.radInterface;
     var spacing = (orderObj.cities.length > 0) ? 360/orderObj.cities.length : 0;
+    var offset = orderObj.offset * 180 / Math.PI;
+    console.log(offset);
     _this.dimensions.forEach(function (item,idx) {
         if (item.group === orderObj.groupId) {
             if (orderObj.cities.indexOf(item.id) >= 0) {
-                item.pos = spacing * orderObj.cities.indexOf(item.id);
+                item.pos = offset + spacing * orderObj.cities.indexOf(item.id);
                 _this.radvizViews.updateDimensionPosition(item.id,item.group,item.pos);
             }
         }
@@ -179,7 +181,17 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     this.dimensions[dimensionId].group = groupId;
     this.dimensionsGroups[groupId].dimensions.push(dimensionId);
     this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
-    window.tsp.solveTSPCities(this.dimensionsGroups[groupId].dimensions,groupId);
+
+    /*Fala quais angulos foram usados*/
+    var anglesUsed = [];
+    for (var i in this.dimensions){
+        if ((!this.dimensions[i].available) && (this.dimensions[i].group != groupId)) {
+            anglesUsed.push((this.dimensions[i].pos * Math.PI * 2) / 360);
+        }
+    }
+    /**/
+
+    window.tsp.solveTSPCities(this.dimensionsGroups[groupId].dimensions,groupId, anglesUsed);
     this.radviz.setAnchors(this.dimensions);
     this.draw();
     this.drawPoints();

@@ -3,8 +3,8 @@
 require(shiny)
 require(TSP)
 
+source("OffsetDG.R")
 
-source("ReadMusicData.R")
 options(shiny.maxRequestSize=100*1024^2) 
 
 concorde_path("/home/jorgehpo/Desktop/concorde/TSP")
@@ -24,6 +24,7 @@ shinyServer(function(input, output,session) {
       if (!is.null(session$dataRadviz)){
         cities = unlist(input$cityObj$cities)
         groupId = unlist(input$cityObj$groupId)
+        anglesUsed = unlist(input$cityObj$anglesUsed)
         if (length(cities) > 0){
           dataCols = as.matrix(session$dataRadviz[,cities+1])
           if(length(cities)<=2){
@@ -35,6 +36,7 @@ shinyServer(function(input, output,session) {
           returnObj = list()
           returnObj$cities = input$cityObj$cities[order];
           returnObj$groupId = input$cityObj$groupId;
+          returnObj$offset = computeOffsetDG(anglesUsed, length(cities))
           session$sendCustomMessage(type='MessageTSPSolved',returnObj)
         }
       }
