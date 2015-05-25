@@ -3,7 +3,13 @@
 require(shiny)
 require(TSP)
 
+source("SortAllDGs.R")
 source("OffsetDG.R")
+
+sigmoid <- function(x, s=10, t= -1){
+  return (1/(1+exp(-s*(x+t))))
+}
+
 
 options(shiny.maxRequestSize=100*1024^2) 
 
@@ -16,6 +22,42 @@ shinyServer(function(input, output,session) {
       return(NULL)
     session$dataRadviz = read.csv(input$file1$datapath)
     session$dataRadviz
+  })
+  
+  observe({
+    if ((!is.null(input$SortAllDGs)) && (!is.null(session$dataRadviz))){
+      cat("===============================================\n")
+      cat("Comecou a ordenacao...",date(),"\n")
+      cat("===============================================\n")
+      retSort = list()
+      retSort$DGs = input$SortAllDGs$dgs
+      retSort$anchorAngles = input$SortAllDGs$dgs
+      retSort$anchorIndex = input$SortAllDGs$idsDAs
+
+
+      
+      nSamp = min(500, nrow(session$dataRadviz))
+      samp = sample(1:nrow(session$dataRadviz), nSamp)
+      classes = matrix(0, nrow = nSamp, ncol = 0)
+      dataset = matrix(0, ncol = 0, nrow = nSamp)
+      
+
+      for (i in 1:length(input$SortAllDGs$dgs)){
+        myD = session$dataRadviz[samp, as.numeric(input$SortAllDGs$idsDAs[[i]]) + 1]
+        classes = cbind(classes, apply(myD, 1, which.max))
+        myD = sweep(myD, MARGIN = 1, apply(myD,MARGIN = 1, max), FUN = "/") #normaliza por linha de forma bonita
+        dataset = cbind(dataset, myD)
+      }
+      dataset = sigmoid(dataset, s= input$SortAllDGs$sigmoidScale, t= input$SortAllDGs$sigmoidTranslate)
+      classes = apply(classes, 1, paste, collapse = "")
+      dataset = sweep(dataset, MARGIN = 1, apply(dataset,MARGIN = 1, sum), FUN = "/") #todo mundo soma 1
+      dataset = as.matrix(dataset)
+      retSort$offsets = sortAllDGs(input$SortAllDGs$dgs, dataset = dataset, classes = classes)
+      #print(paste("=============input: ",date()))
+      #print(input$SortAllDGs)
+      #print(dataset)
+      session$sendCustomMessage(type='MessageDGsSolved',retSort)
+    }
   })
   
   observe(

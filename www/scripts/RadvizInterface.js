@@ -30,6 +30,12 @@ function RadvizInterface(radviz,radViews) {
     }else{
         window.tsp.setCallbackSolution(this.reorderDimensionGroup);
     }
+    if (!window.sortDGs){
+        window.sortDGs = new SortAllDGs(this.callbackSortAllDGs)
+    }else{
+        window.sortDGs.setCallbackSolution(this.callbackSortAllDGs);
+    }
+
 
     $("#tooltipDimension").append("<option value='-1'>None</option>");
     $("#colorDimension").append("<option value='-1'>None</option>");
@@ -145,7 +151,6 @@ RadvizInterface.prototype.reorderDimensionGroup = function (orderObj) {
     var _this = window.radInterface;
     var spacing = (orderObj.cities.length > 0) ? 360/orderObj.cities.length : 0;
     var offset = orderObj.offset * 180 / Math.PI;
-    console.log(offset);
     _this.dimensions.forEach(function (item,idx) {
         if (item.group === orderObj.groupId) {
             if (orderObj.cities.indexOf(item.id) >= 0) {
@@ -158,21 +163,68 @@ RadvizInterface.prototype.reorderDimensionGroup = function (orderObj) {
     _this.drawPoints();
     _this.draw();
 };
-//
-//RadvizInterface.prototype.addDimensionsToGroup = function(dimensionsId, groupId){
-//    if (dimensionsId.constructor !== Array) return;
-//    for (var dimensionId in dimensionsId){
-//        dimensionId = parseInt(dimensionId);
-//        groupId = parseInt(groupId);
-//        this.dimensions[dimensionId].available = false;
-//        this.dimensions[dimensionId].group = groupId;
-//        this.dimensionsGroups[groupId].dimensions.push(dimensionId);
-//        this.radvizViews.addDimensionToGroup(this.dimensions[dimensionId],groupId);
-//    }
-//    this.radviz.setAnchors(this.dimensions);
-//    this.drawPoints();
-//    this.draw();
-//};
+
+RadvizInterface.prototype.callbackSortAllDGs = function(x){
+    console.log(x);
+
+    var _this = window.radInterface;
+
+    var groupIds = Object.keys(x.anchorAngles);
+
+
+    for (var i = 0; i < groupIds.length; i++){
+        var groupId = groupIds[i];
+        var offset = x.offsets[groupId];
+        for (var j = 0; j < x.anchorIndex[groupId].length; j++){
+            var dimId = x.anchorIndex[groupId][j];
+            var dimAngle = x.anchorAngles[groupId][j];
+            var pos = (offset + dimAngle)*180 / Math.PI;
+            _this.radvizViews.updateDimensionPosition(dimId,groupId,pos);
+
+            _this.dimensions[parseInt(dimId)].pos = pos;
+
+
+        }
+        _this.radviz.setAnchors(_this.dimensions);
+        _this.drawPoints();
+        _this.draw();
+    }
+
+    /*var spacing = (orderObj.cities.length > 0) ? 360/orderObj.cities.length : 0;
+    var offset = orderObj.offset * 180 / Math.PI;
+    _this.dimensions.forEach(function (item,idx) {
+        if (item.group === orderObj.groupId) {
+            if (orderObj.cities.indexOf(item.id) >= 0) {
+                item.pos = offset + spacing * orderObj.cities.indexOf(item.id);
+                _this.radvizViews.updateDimensionPosition(item.id,item.group,item.pos);
+            }
+        }
+    });
+    _this.radviz.setAnchors(_this.dimensions);
+    _this.drawPoints();
+    _this.draw();
+
+    */
+};
+
+RadvizInterface.prototype.sortAllDGs = function (){
+    /*Fala quais angulos foram usados*/
+    var dgs = {};
+    var idsDAs = {};
+    for (var i in this.dimensions){
+        if (!this.dimensions[i].available){
+            if (!dgs[this.dimensions[i].group]){
+                dgs[this.dimensions[i].group] = [];
+                idsDAs[this.dimensions[i].group] = [];
+            }
+            dgs[this.dimensions[i].group].push((this.dimensions[i].pos * Math.PI * 2) / 360);
+            idsDAs[this.dimensions[i].group].push(i);
+        }
+    }
+
+    window.sortDGs.solveSortAllDGs(dgs,idsDAs, this.sigmoid.scale, this.sigmoid.translate);
+    /**/
+};
 
 RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     dimensionId = parseInt(dimensionId);
@@ -186,7 +238,7 @@ RadvizInterface.prototype.addDimensionToGroup = function (dimensionId,groupId) {
     var anglesUsed = [];
     for (var i in this.dimensions){
         if ((!this.dimensions[i].available) && (this.dimensions[i].group != groupId)) {
-            anglesUsed.push((this.dimensions[i].pos * Math.PI * 2) / 360);
+            anglesUsed.push((this.dimensions[i].pos * Math.PI * 2) / 360); //envia em radianos pro R
         }
     }
     /**/

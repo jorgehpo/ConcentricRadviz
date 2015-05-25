@@ -21,7 +21,8 @@ shinyUI(
       tags$script(type="text/javascript", src= "scripts/TSP_R.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizViews.js"),
       tags$script(type="text/javascript", src= "scripts/RadvizDimensionGroup.js"),
-      tags$script(type="text/javascript", src= "scripts/scriptRadviz.js")
+      tags$script(type="text/javascript", src= "scripts/scriptRadviz.js"),
+      tags$script(type="text/javascript", src= "scripts/SortAllDGs.js")
     ),
     titlePanel("Concentric Radviz"),
     fluidPage(

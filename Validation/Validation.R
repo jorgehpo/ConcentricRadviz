@@ -10,7 +10,7 @@ Recall <- function(retrieved, relevant){
   return (sum (retrieved %in% relevant) / length(relevant) )
 }
 
-MIR = read.csv("data/MIR_Dortmund.csv")
+MIR = read.csv("../data/MIR_Dortmund.csv")
 auxGenre = MIR[,6:14] #from alternative to rock
 genreClass = colnames(auxGenre)[apply(auxGenre, 1, which.max)]
 
@@ -28,6 +28,12 @@ auxTempo = MIR[,c("aggressive", "relaxed")]
 tempoClass = colnames(auxTempo)[apply(auxTempo, 1, which.max)]
 
 ret = list()
+#test MAP
+tudo = cbind(singerClass, moodClass,genreClass,instrumentClass,sep='.')
+mat = as.matrix(read.table('Dissimilarity.dat'))
+MAPmeasure(classes = tudo, dissMatrix = mat)
+
+
 
 #test Genre without sigmoid
 cat('test Genre without sigmoid\n')

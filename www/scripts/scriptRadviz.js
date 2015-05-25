@@ -1,6 +1,9 @@
 //scriptRadviz.js #main function called from R shiny
 
 $(document).keypress(function (eventObject) {
+    if (eventObject.keyCode == 115){// pressed 's' for sort all dimensions
+        window.radInterface.sortAllDGs();
+    }
     if (eventObject.keyCode == 97){ //pressed 'a' for MAP - distance Matrix
         var x = [];
         var y = [];

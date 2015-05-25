@@ -1,7 +1,6 @@
 require(MASS) #chull
 
 computeOffsetDG <- function(anglesUsed, n){
-  cat ('angles used =', anglesUsed,'\n')
   if (length(anglesUsed) == 0){
     return (0);
   }
