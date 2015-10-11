@@ -300,3 +300,13 @@ Radviz.prototype.normalizeGroups = function(groupColumns){
 Radviz.prototype.getDimensionNames = function () {
     return Object.keys(this.myData);
 };
+
+//help
+Math.radians = function(degrees) {
+    return degrees * Math.PI / 180;
+};
+
+// Converts from radians to degrees.
+Math.degrees = function(radians) {
+    return radians * 180 / Math.PI;
+};

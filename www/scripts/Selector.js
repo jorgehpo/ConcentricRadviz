@@ -11,13 +11,34 @@ Selector.prototype.initEvents = function () {
 	$("#btn-reset-selection").on("click", function () {
 		_this.interface.resetSelection();
 		_this.interface.currentSelectionMode = "reset";
+        $(".dimension").off("click");
+        $("#anchorSelectorSliderController").data("ionRangeSlider").update({onChange: function () { return false; }});
 	});
 	$("#btn-add-selection").on("click", function () {
 		_this.interface.currentSelectionMode = "add";
+        $(".dimension").off("click");
+        $("#anchorSelectorSliderController").data("ionRangeSlider").update({onChange: function () { return false; }});
 	});
 	$("#btn-sub-selection").on("click", function () {
 		_this.interface.currentSelectionMode = "sub";
+        $(".dimension").off("click");
+        $("#anchorSelectorSliderController").data("ionRangeSlider").update({onChange: function () { return false; }});
 	});
+    $("#btn-anchor-selection").on("click", function () {
+        _this.interface.resetSelection();
+        _this.interface.currentSelectionMode = "anchor";
+        $(".dimension").on("click", function () {
+            //var distanceSlider = $("#anchorSelectorSliderController").data("ionRangeSlider");
+            var selectedDimension = $(this).attr("data-dimension");
+            $("label[for='anchorSelectorSlider']").html("Distance Threshold from " + _this.interface.dimensions[selectedDimension].attribute);
+            _this.interface.selectElementsFromDistanceToAnchor($("#anchorSelectorSliderController").val(),_this.interface.dimensions[$(this).attr("data-dimension")]);
+            $("#anchorSelectorSliderController").data("ionRangeSlider").update({onChange: function (data) {
+                var newValue = (isNaN(parseFloat(data.from))) ? 0.0 : parseFloat(data.from);
+                _this.interface.selectElementsFromDistanceToAnchor(newValue,_this.interface.dimensions[selectedDimension]);
+            }});
+        });
+        _this.interface.currentAnchor = null;
+    });
 
 
 	$("#btn-hide-selected").on("click", function () {

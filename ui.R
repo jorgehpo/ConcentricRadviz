@@ -56,6 +56,7 @@ shinyUI(
         column(6,RadvizCanvas("myCanvas")),
         column(3,class="well",strong('Selector'),
           includeHTML("selectorButtons.html"),
+          tags$div(id="anchorSelectorSlider",class="",sliderInput("anchorSelectorSliderController", label = "Anchor Distance",min = 0.01, max = 1.0, step = 0.01, value = 0.1)),
           tags$hr(),
           selectInput(inputId = "listDimension", label = "Label Dimension", choices = c(), selected = NULL, multiple = FALSE, selectize=FALSE),
           selectInput(inputId = "selectionList", label = "Selected Elements", choices = c(), selected = NULL, multiple = TRUE, selectize=FALSE),

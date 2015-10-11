@@ -394,12 +394,40 @@ RadvizInterface.prototype.resetSelection = function () {
     this.selectMultipleItems([]);
 };
 
+RadvizInterface.prototype.selectElementsFromDistanceToAnchor = function (distance,anchor) {
+    this.currentSelection = [];
+    var _this = this;
+    var rad = _this.radvizViews.options.maxCircleRadius;
+    var anchorX = rad * Math.cos(Math.radians(anchor.pos));
+    var anchorY = rad * Math.sin(Math.radians(anchor.pos));
+
+    var selectedElements = [];
+    _this.radvizViews.svg.selectAll(".dot")
+        .classed("selected", function(d) {
+            var id = d3.select(this).attr("id");
+            if (parseInt(d3.select(this).attr("data-is-hidden")) == 0) {
+                var distX = parseFloat(d3.select(this).attr("cx")) - anchorX;
+                var distY = parseFloat(d3.select(this).attr("cy")) - anchorY;
+                var dist = Math.sqrt(distX*distX + distY*distY);
+                var scale = (dist/(parseFloat(rad)*2));
+                if (scale < distance) {
+                    selectedElements.push(parseInt(d3.select(this).attr("id")));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+
+    this.selectMultipleItems(selectedElements);
+};
+
 RadvizInterface.prototype.selectMultipleItems = function (selection) {
     var _this = this;
     if (this.currentSelectionMode === "add") {
         this.currentSelection = this.currentSelection.concat(selection);
     }
-    if (this.currentSelectionMode === "reset") {
+    if (this.currentSelectionMode === "reset" || this.currentSelectionMode === "anchor") {
         this.currentSelection = selection;
     }
     if (this.currentSelectionMode === "sub") {
