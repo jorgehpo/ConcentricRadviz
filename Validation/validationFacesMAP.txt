@@ -1,0 +1,19 @@
+%Faces OK. Musica ainda nao
+
+\begin{table}[h]
+\caption{Mean Average Precision for Radviz and Concentric Radviz}
+\label{tab:MAP}
+\begin{tabular}{c|c|c|c|c|}
+    & Radviz & \multicolumn{3}{c|}{Concentric Radviz} \\\hline
+    &        & $\hat{\sigma}(x,0,1)$ & $\hat{\sigma}(x,10,-0.8)$ & $\hat{\sigma}(x,20,-1)$\\ 
+    &        & \includegraphics[scale=0.25]{figs/sigmoid1.pdf} & \includegraphics[scale=0.25]{figs/sigmoid3.pdf} & \includegraphics[scale=0.25]{figs/sigmoid4.pdf}\\ \hline 
+1-a) & 0.7141296  & 0.7141296 & 0.8846697 & 0.9062229 \\
+1-b) & 0.5377869 & 0.5942277  & 0.7205559 &  0.8608192\\
+1-c) & 0.3842864 & 0.4349916 & 0.6053337 &  0.8464108\\
+1-d) & 0.2783669 & 0.290706 &  0.4522589 &  0.6062313\\
+2-a) & 0.9150036 & 0.9150036 & 0.9787339  & 0.9852516 \\ 
+2-b) & 0.6350508  & 0.7010888 &  0.8840118 &  0.9110485 \\
+2-c) & 0.5709248 & 0.593757 & 0.8113171 & 0.8368488\\
+2-d) & 0.3574039 & 0.3921296  & 0.6975161  & 0.7500007 \\      
+\end{tabular}
+\end{table}

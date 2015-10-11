@@ -4,6 +4,8 @@ function Radviz(data){
     }
     this.colorIsDensity = true;
     this.GRID_N = 100;
+    this.densityGrid = new Uint32Array(this.GRID_N*this.GRID_N);
+    this.zeroGrid = new Uint32Array(this.GRID_N*this.GRID_N);
     this.myData = data;
     this.normalizeData();
     this.isContinuous = true;
@@ -12,7 +14,7 @@ function Radviz(data){
     this.colors = numeric.rep([this.myData[this.dimNames[0]].length], 0);
     this.selected = [];
     this.hidden = [];
-    this.translate = -0.5;
+    this.translate = 1;
     this.scale = 10;
 }
 
@@ -189,7 +191,7 @@ Radviz.prototype.computeProjection = function() {
     if (this.matrix[0].length == 0){
         return ([]);
     }
-    this.densityGrid = new Uint32Array(this.GRID_N*this.GRID_N);
+    this.densityGrid.set(this.zeroGrid);
     this.maxDensity = 0;
     var anchors = this.anglesToXY();
     var nrow = this.matrix.length;
@@ -276,19 +278,20 @@ Radviz.prototype.normalizeGroups = function(groupColumns){
         var group = groupColumns[gId];
 
         if (group && group.length > 0) {
-            var maxRows = this.mat_t[group[0]].slice(0);
+            var normRow = numeric.rep([this.mat_t[group[0]].length], 0);
             for (var dId in group) { //dimension ID
                 var column = group[dId];
                 for (var rId in this.mat_t[dId]) { //row id
-                    if (this.mat_t[column][rId] > maxRows[rId]) {
-                        maxRows[rId] = this.mat_t[column][rId];
+                    //normRow[rId] += this.mat_t[column][rId] * this.mat_t[column][rId];
+                    if (this.mat_t[column][rId] > normRow[rId]) {
+                        normRow[rId] = this.mat_t[column][rId];
                     }
                 }
             }
             for (var i = 0; i < this.matrix.length; i++) {
-                if (maxRows[i] > 0) {
+                if (normRow[i] > 0) {
                     for (var j = 0; j < group.length; j++) {
-                        this.matrix[i][group[j]] = this.matrix[i][group[j]] / maxRows[i];
+                        this.matrix[i][group[j]] = this.matrix[i][group[j]] / (normRow[i]);
                     }
                 }
             }

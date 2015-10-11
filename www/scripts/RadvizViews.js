@@ -178,8 +178,10 @@ RadvizViews.prototype.drawDimensions = function (groupId) {
     });
 
     this.svg.on('mousemove', function () {
-        if (_this.drag.dragging) {
+        _this._mouseX = d3.mouse(this)[0];
+        _this._mouseY = d3.mouse(this)[1];
 
+        if (_this.drag.dragging) {
             var x = d3.mouse(this)[0];
             var y = d3.mouse(this)[1];
             if (!_this.drag.group) {
@@ -260,15 +262,15 @@ RadvizViews.prototype.getSmallestCircleRadius = function () {
             return this.groups[i].radius - this.options.circleOffset;
         }
     }
-    return this.options.maxCircleRadius - this.options.circleOffset;
+    return this.options.maxCircleRadius - this.options.circleOffset + 10;
 };
 
 RadvizViews.prototype.init = function () {
     this.svg = d3.select(this.element).select("svg");
     this.svg.remove();
     this.svg = d3.select(this.element).append("svg")
-        .attr("width", this.options.diameter)
-        .attr("height", this.options.diameter)
+        .attr("width", this.options.diameter+20)
+        .attr("height", this.options.diameter+20)
         .append("g")
         .attr("transform", "translate(" + this.options.radius + "," + this.options.radius + ") scale (1,-1)");
     this.background = this.svg.append("rect")

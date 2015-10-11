@@ -1,7 +1,7 @@
 function Sigmoid(element,callback) {
     this.el = element;
     this.scale = 10.0;
-    this.translate = -0.5;
+    this.translate = 1;
     this.callback = callback;
     this.initEvents();
     this.draw();

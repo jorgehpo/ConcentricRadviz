@@ -14,7 +14,7 @@ generateDataRecursive <- function(json.folder, genre = "genre_tzanetakis"){
   idsMirex = which(unlist(lapply(varNames,function(x){grepl('mirex',x)})))
   idsNot = which(unlist(lapply(varNames,function(x){grepl('not',x)})))
   idsGenre = which(unlist(lapply(varNames,function(x){grepl('genre',x)})))
-  idsGenreInterest = which(unlist(lapply(varNames,function(x){grepl('genre_tzanetakis',x)})))
+  idsGenreInterest = which(unlist(lapply(varNames,function(x){grepl(genre,x)})))
   idsIgnoreGenres = setdiff(idsGenre, idsGenreInterest)
   ignoreIDs = c(idsNA,idsProbability,idsMirex,idsNot, idsIgnoreGenres)
   
