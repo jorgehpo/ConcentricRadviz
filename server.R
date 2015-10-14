@@ -13,7 +13,7 @@ sigmoid <- function(x, s=10, t= -1){
 
 options(shiny.maxRequestSize=100*1024^2) 
 
-concorde_path("/home/jorgehpo/Desktop/concorde/TSP")
+#concorde_path("/home/jorgehpo/Desktop/concorde/TSP")
 
 shinyServer(function(input, output,session) {
   session$dataRadviz = NULL  
@@ -73,7 +73,7 @@ shinyServer(function(input, output,session) {
             order = 1:length(cities)
           }else{
             mat = 1-cor(dataCols)
-            suppressWarnings({order = solve_TSP(TSP(mat),'concorde')})
+            suppressWarnings({order = solve_TSP(TSP(mat))})
           }
           returnObj = list()
           returnObj$cities = input$cityObj$cities[order];
