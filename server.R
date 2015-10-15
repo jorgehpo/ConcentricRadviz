@@ -16,16 +16,16 @@ options(shiny.maxRequestSize=100*1024^2)
 #concorde_path("/home/jorgehpo/Desktop/concorde/TSP")
 
 shinyServer(function(input, output,session) {
-  session$dataRadviz = NULL  
+  dataRadviz = NULL  
   output$myCanvas <- reactive({
     if (is.null(input$file1))
       return(NULL)
-    session$dataRadviz = read.csv(input$file1$datapath)
-    session$dataRadviz
+    dataRadviz <<- read.csv(input$file1$datapath)
+    dataRadviz
   })
   
   observe({
-    if ((!is.null(input$SortAllDGs)) && (!is.null(session$dataRadviz))){
+    if ((!is.null(input$SortAllDGs)) && (!is.null(dataRadviz))){
       cat("===============================================\n")
       cat("Comecou a ordenacao...",date(),"\n")
       cat("===============================================\n")
@@ -36,14 +36,14 @@ shinyServer(function(input, output,session) {
 
 
       
-      nSamp = min(500, nrow(session$dataRadviz))
-      samp = sample(1:nrow(session$dataRadviz), nSamp)
+      nSamp = min(500, nrow(dataRadviz))
+      samp = sample(1:nrow(dataRadviz), nSamp)
       classes = matrix(0, nrow = nSamp, ncol = 0)
       dataset = matrix(0, ncol = 0, nrow = nSamp)
       
 
       for (i in 1:length(input$SortAllDGs$dgs)){
-        myD = session$dataRadviz[samp, as.numeric(input$SortAllDGs$idsDAs[[i]]) + 1]
+        myD = dataRadviz[samp, as.numeric(input$SortAllDGs$idsDAs[[i]]) + 1]
         classes = cbind(classes, apply(myD, 1, which.max))
         myD = sweep(myD, MARGIN = 1, apply(myD,MARGIN = 1, max), FUN = "/") #normaliza por linha de forma bonita
         dataset = cbind(dataset, myD)
@@ -63,12 +63,12 @@ shinyServer(function(input, output,session) {
   observe(
     {
       input$cityObj
-      if (!is.null(session$dataRadviz)){
+      if (!is.null(dataRadviz)){
         cities = unlist(input$cityObj$cities)
         groupId = unlist(input$cityObj$groupId)
         anglesUsed = unlist(input$cityObj$anglesUsed)
         if (length(cities) > 0){
-          dataCols = as.matrix(session$dataRadviz[,cities+1])
+          dataCols = as.matrix(dataRadviz[,cities+1])
           if(length(cities)<=2){
             order = 1:length(cities)
           }else{
