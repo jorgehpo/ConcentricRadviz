@@ -53,9 +53,6 @@ shinyServer(function(input, output,session) {
       dataset = sweep(dataset, MARGIN = 1, apply(dataset,MARGIN = 1, sum), FUN = "/") #todo mundo soma 1
       dataset = as.matrix(dataset)
       retSort$offsets = sortAllDGs(input$SortAllDGs$dgs, dataset = dataset, classes = classes)
-      #print(paste("=============input: ",date()))
-      #print(input$SortAllDGs)
-      #print(dataset)
       session$sendCustomMessage(type='MessageDGsSolved',retSort)
     }
   })
