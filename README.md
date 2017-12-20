@@ -1,5 +1,8 @@
 # Concentric RadViz
 
+![System preview](https://raw.githubusercontent.com/jorgehpo/ConcentricRadviz/master/images/system.jpg)
+
+
 Jorge Piazentin Ono - Fabio Sikansi - Debora Cristina Correa - Fernando Vieira Paulovich - Afonso Paiva - Luis Gustavo Nonato
 
 ---
